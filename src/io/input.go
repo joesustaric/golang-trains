@@ -12,7 +12,7 @@ func ParseInput(filePath string) ([]string, error) {
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		return []string{"doof"}, err
+		return nil, err
 	}
 	defer file.Close()
 
