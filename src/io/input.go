@@ -1,4 +1,3 @@
-//Package io contains functions to parse input for trains app
 package io
 
 import (
@@ -14,6 +13,11 @@ func ParseInput(filePath string) []string {
 	defer file.Close()
 	result := readLines(file)
 	return createTrimedArray(result)
+}
+
+//ValidateInputDistanceQ splits A-B-C to A B C
+func ValidateInputDistanceQ(input string) []string {
+	return strings.Split(input, "-")
 }
 
 func readLines(file *os.File) []string {

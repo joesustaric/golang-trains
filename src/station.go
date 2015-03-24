@@ -15,7 +15,7 @@ func (s station) GetConnection(name string) station {
 			return *k
 		}
 	}
-	return station{"none", map[*station]int{}}
+	return station{}
 }
 
 func (s station) GetDistanceTo(conn *station) int {

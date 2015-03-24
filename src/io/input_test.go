@@ -47,3 +47,17 @@ func TestValidateInput(t *testing.T) {
 	})
 
 }
+
+func TestValidateInputDistanceQ(t *testing.T) {
+	Convey("Given an valid distance calculation input", t, func() {
+		input := "A-B-C"
+
+		Convey("When ValidateInputDistanceQ is called", func() {
+			result := ValidateInputDistanceQ(input)
+
+			Convey("Then it returns array", func() {
+				So(result, ShouldResemble, []string{"A", "B", "C"})
+			})
+		})
+	})
+}

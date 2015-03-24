@@ -12,14 +12,17 @@ func TestStation(t *testing.T) {
 		name := "F"
 
 		Convey("When we create a new station", func() {
-			station := station{name, map[*station]int{}}
+			s := station{name, map[*station]int{}}
 
 			Convey("The station should be created correctly", func() {
-				So(station.name, ShouldEqual, "F")
+				So(s.name, ShouldEqual, "F")
 			})
 
 		})
 	})
+}
+
+func TestAddConnection(t *testing.T) {
 
 	Convey("Given a station object", t, func() {
 		name := "Foo"
