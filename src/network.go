@@ -1,15 +1,24 @@
 package trains
 
-type network struct {
+//Network Network of trains
+type Network struct {
 	nodes map[string]*station
 }
 
-func (n network) AddNode(stations ...*station) {
+//NewNetwork does what it says
+func NewNetwork() Network {
+	return Network{map[string]*station{}}
+}
+
+//AddNode adds nodes
+func (n Network) AddNode(stations ...*station) {
 	for _, s := range stations {
 		n.nodes[s.name] = s
 	}
 }
 
-func (n network) GetNode(name string) *station {
-	return n.nodes[name]
+//GetNode gets Nodes
+func (n Network) GetNode(name string) (*station, bool) {
+	node, ok := n.nodes[name]
+	return node, ok
 }

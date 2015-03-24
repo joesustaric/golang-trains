@@ -11,14 +11,26 @@ func TestAddNodeAndGetNode(t *testing.T) {
 	Convey("Given a station name 'F'", t, func() {
 		name := "F"
 		s := &station{name, map[*station]int{}}
-		Convey("When we add it to the network", func() {
-			network := network{map[string]*station{}}
-			network.AddNode(s)
+		Convey("When we add it to the Network", func() {
+			Network := NewNetwork()
+			Network.AddNode(s)
 			Convey("We can get it back", func() {
-				result := network.GetNode(name)
+				result, _ := Network.GetNode(name)
 				So(result, ShouldEqual, s)
 			})
+		})
+	})
 
+	Convey("Given an empty Network", t, func() {
+		Network := NewNetwork()
+		Convey("When we ask for a station", func() {
+			station, ok := Network.GetNode("A")
+			Convey("It returns nil", func() {
+				So(station, ShouldBeNil)
+			})
+			Convey("It returns not found", func() {
+				So(ok, ShouldBeFalse)
+			})
 		})
 	})
 }
