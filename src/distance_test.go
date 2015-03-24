@@ -13,8 +13,10 @@ func TestDistanceCalc(t *testing.T) {
 		b := station{"B", map[*station]int{}}
 		a.AddConnection(&b, 5)
 		query := []string{"A", "B"}
+		network := network{map[string]*station{}}
+		network.AddNode(&a, &b)
 		Convey("When we ask for the distance from A-B", func() {
-			result := TotalDistance(query)
+			result := TotalDistance(network, query)
 			Convey("It returns the correct distance", func() {
 				So(result, ShouldEqual, 5)
 			})

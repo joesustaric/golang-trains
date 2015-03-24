@@ -4,8 +4,10 @@ type network struct {
 	nodes map[string]*station
 }
 
-func (n network) AddNode(s *station) {
-	n.nodes[s.name] = s
+func (n network) AddNode(stations ...*station) {
+	for _, s := range stations {
+		n.nodes[s.name] = s
+	}
 }
 
 func (n network) GetNode(name string) *station {
