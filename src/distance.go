@@ -20,7 +20,7 @@ func TotalDistance(n Network, input []string) int {
 	return totalDist
 }
 
-func getDistance(o *station, d *station) int {
+func getDistance(o, d *station) int {
 	for c, dist := range o.connections {
 		if c.name == d.name {
 			return dist
