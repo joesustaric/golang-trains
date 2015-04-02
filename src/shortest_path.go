@@ -1,7 +1,5 @@
 package trains
 
-import "fmt"
-
 // visited set
 //
 // start at origin
@@ -117,7 +115,6 @@ func getNextStationToVisit(current *station, shortestDistToNode map[*station]int
 func calcDistToConnections(currentNode *station, shortestDistToNode map[*station]int, visitedSet map[*station]bool) {
 
 	for c, distToConn := range currentNode.connections {
-		fmt.Println((shortestDistToNode[currentNode] + distToConn))
 
 		if !visitedSet[c] {
 			if (shortestDistToNode[currentNode] + distToConn) <= shortestDistToNode[c] {
