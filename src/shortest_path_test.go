@@ -12,7 +12,7 @@ func TestGetShortestRoute(t *testing.T) {
 		network := NewNetwork()
 		network.AddNode(makeTestStationsA()...)
 		Convey("When we ask for the shortest path from A to E", func() {
-			result := GetShortestRoute(network, "A", "E")
+			result := GetShortestRouteDistance(network, "A", "E")
 			Convey("It returns the shortest path", func() {
 				So(result, ShouldEqual, 5)
 			})
@@ -23,7 +23,7 @@ func TestGetShortestRoute(t *testing.T) {
 		network := NewNetwork()
 		network.AddNode(makeTestStationsB()...)
 		Convey("When we ask for the shortest path from A to C", func() {
-			result := GetShortestRoute(network, "A", "C")
+			result := GetShortestRouteDistance(network, "A", "C")
 			Convey("It returns the shortest path", func() {
 				So(result, ShouldEqual, 9)
 			})

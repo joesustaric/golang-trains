@@ -10,8 +10,8 @@ package trains
 // get all unvisited connections and recalc distance (if lower etc)
 // do this for the next lowest connection
 
-//GetShortestRoute will get the shortest path between two stations
-func GetShortestRoute(n Network, origin, destination string) int {
+//GetShortestRouteDistance will get the shortest path between two stations
+func GetShortestRouteDistance(n Network, origin, destination string) int {
 
 	shortestDistToNode := make(map[*station]int)
 
@@ -40,51 +40,21 @@ func GetShortestRoute(n Network, origin, destination string) int {
 	//mark origin as visited and distance of 0
 	visitedSet[org] = true
 	shortestDistToNode[org] = 0
+
+	return getShortestDistance(org, des, shortestDistToNode, visitedSet)
+}
+func getShortestDistance(origin, destination *station, shortestDistanceToNode map[*station]int, visitedSet map[*station]bool) int {
 	//calc distance to all connecting nodes from current node
-	calcDistToConnections(org, shortestDistToNode, visitedSet)
+	calcDistToConnections(origin, shortestDistanceToNode, visitedSet)
 	//get next node to visit
-	nextStation := getNextStationToVisit(org, shortestDistToNode, visitedSet)
+	nextStation := getNextStationToVisit(origin, shortestDistanceToNode, visitedSet)
 	//add next station to visited set
 	visitedSet[nextStation] = true
 	//have we reached the destination?
-	if visitedSet[des] {
-		return shortestDistToNode[des]
+	if !visitedSet[destination] {
+		getShortestDistance(nextStation, destination, shortestDistanceToNode, visitedSet)
 	}
-
-	//calc distance to all connecting nodes from current node
-	calcDistToConnections(nextStation, shortestDistToNode, visitedSet)
-	//get next node to visit
-	nextStation = getNextStationToVisit(nextStation, shortestDistToNode, visitedSet)
-	//add next station to visited set
-	visitedSet[nextStation] = true
-	//have we reached the destination?
-	if visitedSet[des] {
-		return shortestDistToNode[des]
-	}
-
-	//calc distance to all connecting nodes from current node
-	calcDistToConnections(nextStation, shortestDistToNode, visitedSet)
-	//get next node to visit
-	nextStation = getNextStationToVisit(nextStation, shortestDistToNode, visitedSet)
-	//add next station to visited set
-	visitedSet[nextStation] = true
-	//have we reached the destination?
-	if visitedSet[des] {
-		return shortestDistToNode[des]
-	}
-
-	//calc distance to all connecting nodes from current node
-	calcDistToConnections(nextStation, shortestDistToNode, visitedSet)
-	//get next node to visit
-	nextStation = getNextStationToVisit(nextStation, shortestDistToNode, visitedSet)
-	//add next station to visited set
-	visitedSet[nextStation] = true
-	//have we reached the destination?
-	if visitedSet[des] {
-		return shortestDistToNode[des]
-	}
-
-	return 1234
+	return shortestDistanceToNode[destination]
 }
 
 func getNextStationToVisit(current *station, shortestDistToNode map[*station]int, visitedSet map[*station]bool) *station {
