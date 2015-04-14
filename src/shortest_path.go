@@ -1,48 +1,50 @@
 package trains
 
-// visited set
-//
-// start at origin
-// calculated distance to all connecting nodes from current
-// (if the calc is < current distance (initially infinity)) assign it to its value
-// go to the lowest connecting dist node
-// add it to the visited set
-// get all unvisited connections and recalc distance (if lower etc)
-// do this for the next lowest connection
-
 //GetShortestRouteDistance will get the shortest path between two stations
 func GetShortestRouteDistance(n Network, origin, destination string) int {
 
-	shortestDistToNode := make(map[*station]int)
-
-	//add all the paths and set their dist to 999 (infinity)
-	for _, s := range n.nodes {
-		shortestDistToNode[s] = 999
+	org, dest := getOriginAndDestinationNodes(origin, destination, n)
+	if org == nil || dest == nil {
+		return 0
 	}
+	shortestDistToNode := createShortestVisitedSet(n, org)
+	visitedStation := createVisitedStationSet(n, org)
 
-	visitedSet := make(map[*station]bool)
-	//add all nodes to the visited set and flag them as not visited
-	for _, s := range n.nodes {
-		visitedSet[s] = false
-	}
+	return getShortestDistance(org, dest, shortestDistToNode, visitedStation)
+}
 
-	//get origin node
+func getOriginAndDestinationNodes(origin, destination string, n Network) (*station, *station) {
+
 	org, ok := n.GetNode(origin)
 	if !ok {
-		return 0
+		return nil, nil
 	}
-	//get destination node
 	des, ok := n.GetNode(destination)
 	if !ok {
-		return 0
+		return nil, nil
 	}
-
-	//mark origin as visited and distance of 0
-	visitedSet[org] = true
-	shortestDistToNode[org] = 0
-
-	return getShortestDistance(org, des, shortestDistToNode, visitedSet)
+	return org, des
 }
+
+func createVisitedStationSet(n Network, origin *station) map[*station]bool {
+	result := make(map[*station]bool)
+	for _, s := range n.nodes {
+		result[s] = false
+	}
+	result[origin] = true //mark origin visited
+	return result
+}
+
+func createShortestVisitedSet(n Network, origin *station) map[*station]int {
+	result := make(map[*station]int)
+	//999 = infinity representation
+	for _, s := range n.nodes {
+		result[s] = 9999
+	}
+	result[origin] = 0 //0 distance to get form origin to origin
+	return result
+}
+
 func getShortestDistance(origin, destination *station, shortestDistanceToNode map[*station]int, visitedSet map[*station]bool) int {
 	//calc distance to all connecting nodes from current node
 	calcDistToConnections(origin, shortestDistanceToNode, visitedSet)
