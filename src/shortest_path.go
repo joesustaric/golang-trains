@@ -1,7 +1,7 @@
 package trains
 
 //GetShortestRouteDistance will get the shortest path between two stations
-func GetShortestRouteDistance(n Network, origin, destination string) int {
+func GetShortestRouteDistance(n *Network, origin, destination string) int {
 
 	org, dest := getOriginAndDestinationNodes(origin, destination, n)
 	if org == nil || dest == nil {
@@ -13,7 +13,7 @@ func GetShortestRouteDistance(n Network, origin, destination string) int {
 	return getShortestDistance(org, dest, shortestDistToNode, visitedStation)
 }
 
-func getOriginAndDestinationNodes(origin, destination string, n Network) (*station, *station) {
+func getOriginAndDestinationNodes(origin, destination string, n *Network) (*station, *station) {
 
 	org, ok := n.GetNode(origin)
 	if !ok {
@@ -26,7 +26,7 @@ func getOriginAndDestinationNodes(origin, destination string, n Network) (*stati
 	return org, des
 }
 
-func createVisitedStationSet(n Network, origin *station) map[*station]bool {
+func createVisitedStationSet(n *Network, origin *station) map[*station]bool {
 	result := make(map[*station]bool)
 	for _, s := range n.nodes {
 		result[s] = false
@@ -35,7 +35,7 @@ func createVisitedStationSet(n Network, origin *station) map[*station]bool {
 	return result
 }
 
-func createShortestVisitedSet(n Network, origin *station) map[*station]int {
+func createShortestVisitedSet(n *Network, origin *station) map[*station]int {
 	result := make(map[*station]int)
 	//999 = infinity representation
 	for _, s := range n.nodes {
