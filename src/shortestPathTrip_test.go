@@ -16,23 +16,40 @@ func TestNewShortestPathTrip(t *testing.T) {
 		t := trip{org, dest}
 		Convey("When we ask for a new ShortestPathTrip Object", func() {
 			shortestPathTrip := NewShortestPathTrip(n, &t)
-			Convey("It returns a correctly initalised object", func() {
-				visitedStations := getVisitedStations(n)
+			Convey("It contains the correct refrence to network", func() {
 				So(shortestPathTrip.network, ShouldEqual, n)
+			})
+			Convey("It contains the correct refrence to the original trip", func() {
 				So(shortestPathTrip.originalTrip, ShouldEqual, &t)
+			})
+			Convey("It initialises the visited stations correctly", func() {
+				visitedStations := getVisitedStations(n, &t)
 				So(shortestPathTrip.visitedStations, ShouldResemble, visitedStations)
+			})
+			Convey("It initialises the distance to all nodes as infinity(9999) except origin", func() {
+				distanceToStationFromOrigin := getStationsDistanceFromOrigin(shortestPathTrip.visitedStations, &t)
+				So(shortestPathTrip.distanceToStation, ShouldResemble, distanceToStationFromOrigin)
 			})
 		})
 
 	})
 }
 
-func getVisitedStations(network *Network) map[*station]bool {
+//these setup the state we expect in the test.
+func getVisitedStations(network *Network, t *trip) map[*station]bool {
 	r := make(map[*station]bool)
-
 	for _, s := range network.nodes {
 		r[s] = false
 	}
+	r[t.from] = true
+	return r
+}
 
+func getStationsDistanceFromOrigin(v map[*station]bool, t *trip) map[*station]int {
+	r := make(map[*station]int)
+	for s := range v {
+		r[s] = 99999
+	}
+	r[t.from] = 0
 	return r
 }
