@@ -35,6 +35,37 @@ func TestNewShortestPathTrip(t *testing.T) {
 	})
 }
 
+func TestNextStationToVisit(t *testing.T) {
+
+	Convey("Given a network and origin and destination trip", t, func() {
+
+		n := getTestNetworkOfTrains()
+		Convey("When we ask for a new NextStationToVisit when org and dest are different", func() {
+			org, _ := n.GetNode("A")
+			dest, _ := n.GetNode("B")
+			t := trip{org, dest}
+			shortestPathTrip := NewShortestPathTrip(n, &t)
+			Convey("It returns the correct next station ", func() {
+				// assert default next station
+			})
+
+		})
+
+		Convey("When we ask for a new NextStationToVisit when org and dest are the same", func() {
+			org, _ := n.GetNode("B")
+			dest, _ := n.GetNode("B")
+			t := trip{org, dest}
+			shortestPathTrip := NewShortestPathTrip(n, &t)
+			Convey("It returns the correct next station ", func() {
+				// assert default next station
+			})
+
+		})
+
+	})
+
+}
+
 //these setup the state we expect in the test.
 func getVisitedStations(network *Network, t *trip) map[*station]bool {
 	r := make(map[*station]bool)
