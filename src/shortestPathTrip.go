@@ -15,11 +15,56 @@ func NewShortestPathTrip(n *Network, t *trip) *ShortestPathTrip {
 	return &ShortestPathTrip{n, t, visitedStations, distToStation}
 }
 
+//GetNextStation sdkf
+func (s ShortestPathTrip) GetNextStation() *station {
+	// unvisitedConn := make(map[*station]int)
+	//
+	// for s, visited := range visitedSet {
+	// 	if visited {
+	// 		for c := range s.connections {
+	// 			if !visitedSet[c] {
+	// 				unvisitedConn[c] = shortestDistToNode[c]
+	// 			}
+	// 		}
+	// 	}
+	// }
+	//
+	// var result *station
+	// lowestDist := 9999
+	// for st, d := range unvisitedConn {
+	// 	if d <= lowestDist {
+	// 		lowestDist = d
+	// 		result = st
+	// 	}
+	// }
+	// return result
+	unvisitedConn := make(map[*station]int)
+	for n, visited := range s.visitedStations {
+		if visited {
+			for c := range n.connections {
+				if !s.visitedStations[c] {
+					unvisitedConn[c] = s.distanceToStation[c]
+				}
+			}
+		}
+	}
+
+	var result *station
+	lowestDist := 99999
+	for st, d := range unvisitedConn {
+		if d <= lowestDist {
+			lowestDist = d
+			result = st
+		}
+	}
+	return result
+}
+
 func createDefaultVisitedStationsMap(n *Network, t *trip) map[*station]bool {
 	r := make(map[*station]bool)
-	for _, s := range n.nodes {
-		r[s] = false
-	}
+	// for _, s := range n.nodes {
+	// 	r[s] = false
+	// }
 	r[t.from] = true
 	return r
 }
