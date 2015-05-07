@@ -10,7 +10,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 
 	Convey("Given a network and origin and destination trip", t, func() {
 
-		n := getTestNetworkOfTrains()
+		n, sts := getTestNetworkOfTrains()
 		org, _ := n.GetNode("A")
 		dest, _ := n.GetNode("B")
 		t := trip{org, dest}
@@ -26,8 +26,11 @@ func TestNewShortestPathTrip(t *testing.T) {
 				visitedStations := getVisitedStations(n, &t)
 				So(shortestPathTrip.visitedStations, ShouldResemble, visitedStations)
 			})
+			Convey("It contains the correct current node", func() {
+				So(shortestPathTrip.currentNode, ShouldEqual, org)
+			})
 			Convey("It initialises the distance to all nodes as infinity(9999) except origin", func() {
-				distanceToStationFromOrigin := getStationsDistanceFromOrigin(shortestPathTrip.visitedStations, &t)
+				distanceToStationFromOrigin := getStationsDistanceFromOrigin(sts, &t)
 				So(shortestPathTrip.distanceToStation, ShouldResemble, distanceToStationFromOrigin)
 			})
 		})
@@ -39,7 +42,7 @@ func TestNextStationToVisit(t *testing.T) {
 
 	Convey("Given a network and origin and destination trip", t, func() {
 
-		n := getTestNetworkOfTrains()
+		n, _ := getTestNetworkOfTrains()
 		Convey("When we ask for a new NextStationToVisit when org and dest are different", func() {
 			org, _ := n.GetNode("A")
 			dest, _ := n.GetNode("B")
@@ -47,21 +50,22 @@ func TestNextStationToVisit(t *testing.T) {
 			shortestPathTrip := NewShortestPathTrip(n, &t)
 			nextStation := shortestPathTrip.GetNextStation()
 			Convey("It returns the correct next station ", func() {
-				So(nextStation.name, ShouldEqual, "B")
+				So(nextStation.name, ShouldBeIn, []string{"B", "D"})
 			})
 
 		})
 
-		// Convey("When we ask for a new NextStationToVisit when org and dest are the same", func() {
-		// 	org, _ := n.GetNode("B")
-		// 	dest, _ := n.GetNode("B")
-		// 	t := trip{org, dest}
-		// 	shortestPathTrip := NewShortestPathTrip(n, &t)
-		// 	Convey("It returns the correct next station ", func() {
-		// 		// assert default next station
-		// 	})
-		//
-		// })
+		Convey("When we ask for a new NextStationToVisit when org and dest are the same", func() {
+			org, _ := n.GetNode("B")
+			dest, _ := n.GetNode("B")
+			t := trip{org, dest}
+			shortestPathTrip := NewShortestPathTrip(n, &t)
+			nextStation := shortestPathTrip.GetNextStation()
+			Convey("It returns the correct next station ", func() {
+				So(nextStation.name, ShouldEqual, "C")
+			})
+
+		})
 
 	})
 
@@ -77,9 +81,10 @@ func getVisitedStations(network *Network, t *trip) map[*station]bool {
 	return r
 }
 
-func getStationsDistanceFromOrigin(v map[*station]bool, t *trip) map[*station]int {
+func getStationsDistanceFromOrigin(n []*station, t *trip) map[*station]int {
 	r := make(map[*station]int)
-	for s := range v {
+
+	for _, s := range n {
 		r[s] = 99999
 	}
 	r[t.from] = 0

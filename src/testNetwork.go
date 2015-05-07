@@ -1,7 +1,7 @@
 package trains
 
 // AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7
-func getTestNetworkOfTrains() *Network {
+func getTestNetworkOfTrains() (*Network, []*station) {
 	network := NewNetwork()
 
 	a := station{"A", map[*station]int{}}
@@ -19,8 +19,8 @@ func getTestNetworkOfTrains() *Network {
 	c.AddConnection(&e, 2)
 	e.AddConnection(&b, 3)
 	a.AddConnection(&e, 7)
-	s := []*station{&a, &b, &c, &d, &e}
-	network.AddNode(s...)
+	stations := []*station{&a, &b, &c, &d, &e}
+	network.AddNode(stations...)
 
-	return &network
+	return &network, stations
 }

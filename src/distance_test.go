@@ -9,7 +9,7 @@ import (
 func TestDistanceCalc(t *testing.T) {
 
 	Convey("Given a Network of connecting stations", t, func() {
-		network := getTestNetworkOfTrains()
+		network, _ := getTestNetworkOfTrains()
 
 		Convey("When we ask for the distance from A-B-C", func() {
 			query := []string{"A", "B", "C"}

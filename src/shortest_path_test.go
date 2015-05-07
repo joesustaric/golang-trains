@@ -9,7 +9,7 @@ import (
 func TestGetShortestRoute(t *testing.T) {
 
 	Convey("Given a network of stations", t, func() {
-		network := getTestNetworkOfTrains()
+		network, _ := getTestNetworkOfTrains()
 
 		Convey("When we ask for the shortest path from A to C", func() {
 			result := GetShortestRouteDistance(network, "A", "C")

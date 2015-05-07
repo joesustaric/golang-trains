@@ -1,9 +1,12 @@
 package trains
 
+import "fmt"
+
 //ShortestPathTrip description
 type ShortestPathTrip struct {
 	network           *Network
 	originalTrip      *trip
+	currentNode       *station
 	visitedStations   map[*station]bool
 	distanceToStation map[*station]int
 }
@@ -11,51 +14,35 @@ type ShortestPathTrip struct {
 //NewShortestPathTrip description
 func NewShortestPathTrip(n *Network, t *trip) *ShortestPathTrip {
 	visitedStations := createDefaultVisitedStationsMap(n, t)
-	distToStation := initDistanceToStations(visitedStations)
-	return &ShortestPathTrip{n, t, visitedStations, distToStation}
+	distToStation := initDistanceToStations(visitedStations, n)
+	return &ShortestPathTrip{network: n, originalTrip: t, currentNode: t.from, visitedStations: visitedStations, distanceToStation: distToStation}
 }
 
 //GetNextStation sdkf
 func (s ShortestPathTrip) GetNextStation() *station {
-	// unvisitedConn := make(map[*station]int)
-	//
-	// for s, visited := range visitedSet {
-	// 	if visited {
-	// 		for c := range s.connections {
-	// 			if !visitedSet[c] {
-	// 				unvisitedConn[c] = shortestDistToNode[c]
-	// 			}
-	// 		}
-	// 	}
-	// }
-	//
-	// var result *station
-	// lowestDist := 9999
-	// for st, d := range unvisitedConn {
-	// 	if d <= lowestDist {
-	// 		lowestDist = d
-	// 		result = st
-	// 	}
-	// }
-	// return result
+
 	unvisitedConn := make(map[*station]int)
-	for n, visited := range s.visitedStations {
-		if visited {
-			for c := range n.connections {
-				if !s.visitedStations[c] {
-					unvisitedConn[c] = s.distanceToStation[c]
-				}
+	for st, dist := range s.currentNode.connections {
+		for c := range st.connections {
+			if !s.visitedStations[c] {
+				unvisitedConn[c] = dist
 			}
 		}
 	}
 
 	var result *station
 	lowestDist := 99999
-	for st, d := range unvisitedConn {
-		if d <= lowestDist {
-			lowestDist = d
-			result = st
+	fmt.Println(len(unvisitedConn))
+	for st, d := range s.currentNode.connections {
+		if !s.visitedStations[st] {
+			if d <= lowestDist {
+				fmt.Println("--", lowestDist, "+", st.name, "d=", d)
+				lowestDist = d
+				result = st
+				fmt.Println("!!", lowestDist, "+", st.name, "d=", d, "result=", result.name)
+			}
 		}
+
 	}
 	return result
 }
@@ -69,15 +56,16 @@ func createDefaultVisitedStationsMap(n *Network, t *trip) map[*station]bool {
 	return r
 }
 
-func initDistanceToStations(visitedSet map[*station]bool) map[*station]int {
+func initDistanceToStations(visitedSet map[*station]bool, n *Network) map[*station]int {
 	r := make(map[*station]int)
-	for s, v := range visitedSet {
-		if v {
-			r[s] = 0
-		} else {
-			r[s] = 99999
-		}
-
+	for name := range n.nodes {
+		s := n.nodes[name]
+		r[s] = 99999
 	}
+
+	for s := range visitedSet {
+		r[s] = 0
+	}
+
 	return r
 }

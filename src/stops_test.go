@@ -9,7 +9,7 @@ import (
 func TestGetTripsBetween(t *testing.T) {
 
 	Convey("Given a network of stations", t, func() {
-		network := getTestNetworkOfTrains()
+		network, _ := getTestNetworkOfTrains()
 
 		Convey("When we ask for trips between C-C with stop constraint of 3", func() {
 			t := tripHopsQuery{origin: "C", destination: "C", maxHops: 3}
