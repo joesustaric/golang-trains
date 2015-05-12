@@ -5,19 +5,19 @@ type Network struct {
 	nodes map[string]*station
 }
 
-//NewNetwork does what it says
+//NewNetwork returns a new network
 func NewNetwork() Network {
 	return Network{map[string]*station{}}
 }
 
-//AddNode adds nodes
+//AddNode adds a station to the network
 func (n Network) AddNode(stations ...*station) {
 	for _, s := range stations {
 		n.nodes[s.name] = s
 	}
 }
 
-//GetNode gets Nodes
+//GetNode will get the node
 func (n Network) GetNode(name string) (*station, bool) {
 	node, ok := n.nodes[name]
 	return node, ok
