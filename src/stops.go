@@ -14,7 +14,7 @@ type trip struct {
 const firstHop int = 1
 const singleHop int = 1
 
-// GetNumberOfRoutes balh
+// GetNumberOfRoutes returns the number of routes in a network with a hops query.
 func GetNumberOfRoutes(n *Network, thq tripHopsQuery) int {
 	origin, ok := n.GetNode(thq.origin)
 	if !ok {
