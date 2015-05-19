@@ -1,7 +1,7 @@
 package trains
 
 // This my representation of infinity for lack of a better way.
-const INFINITY = 9999
+const INFINITY = 99999
 
 // ShortestPathTrip this is the data structure which contains all the data
 // needed to calculate the shortest path trip.
@@ -39,6 +39,18 @@ func (s *ShortestPathTrip) GetNextStation() *station {
 	return result
 }
 
+// CalcDistToConn will calculate the distance to all the connecting nodes form
+// the current connecting node
+func (s *ShortestPathTrip) CalcDistToConn() {
+	for st, d := range s.currentNode.connections {
+		if s.distanceToStation[st] == INFINITY {
+			s.distanceToStation[st] = d
+		} else {
+			s.distanceToStation[st] = s.distanceToStation[st] + d
+		}
+	}
+}
+
 func (s *ShortestPathTrip) createUnvisitedConnectionsMap(currentStation *station) map[*station]int {
 	unvisitedConn := make(map[*station]int)
 	for st, dist := range currentStation.connections {
@@ -61,7 +73,7 @@ func initDistanceToStations(visitedSet map[*station]bool, n *Network) map[*stati
 	r := make(map[*station]int)
 	for name := range n.nodes {
 		s := n.nodes[name]
-		r[s] = 99999
+		r[s] = INFINITY
 	}
 
 	for s := range visitedSet {

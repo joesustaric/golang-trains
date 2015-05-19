@@ -38,7 +38,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 	})
 }
 
-func TestNextStationToVisit(t *testing.T) {
+func TestGetNextStation(t *testing.T) {
 
 	Convey("Given a network and origin and destination trip", t, func() {
 		n, _ := getTestNetworkOfTrains()
@@ -64,6 +64,28 @@ func TestNextStationToVisit(t *testing.T) {
 			})
 		})
 
+	})
+}
+
+func TestCalcDistToConn(t *testing.T) {
+	Convey("Given a new shortest path trip object", t, func() {
+		n, _ := getTestNetworkOfTrains()
+		org, _ := n.GetNode("A")
+		dest, _ := n.GetNode("C")
+		t := trip{org, dest}
+		shortestPathTrip := NewShortestPathTrip(n, &t)
+		Convey("When ask to calculate dist to connections from its current node", func() {
+			shortestPathTrip.CalcDistToConn()
+			Convey("It calcualte it correctly", func() {
+				s1, _ := n.GetNode("B")
+				s2, _ := n.GetNode("D")
+				s3, _ := n.GetNode("E")
+				So(shortestPathTrip.distanceToStation[s1], ShouldEqual, 5)
+				So(shortestPathTrip.distanceToStation[s2], ShouldEqual, 5)
+				So(shortestPathTrip.distanceToStation[s3], ShouldEqual, 7)
+			})
+
+		})
 	})
 }
 
