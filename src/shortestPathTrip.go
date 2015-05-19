@@ -40,16 +40,19 @@ func (s *ShortestPathTrip) VisitNextStation() {
 	s.currentNode = result
 }
 
-// CalcDistToConn will calculate the distance to all the connecting nodes form
-// the current connecting node
+// CalcDistToConn will update the distances to the nodes only if the new distance
+// from the current node is shorter
 func (s *ShortestPathTrip) CalcDistToConn() {
 	for st, d := range s.currentNode.connections {
-		if s.distanceToStation[st] == INFINITY {
-			s.distanceToStation[st] = d + s.distanceToStation[s.currentNode]
-		} else if (d + s.distanceToStation[s.currentNode]) < s.distanceToStation[st] {
-			s.distanceToStation[st] = d + s.distanceToStation[s.currentNode]
+		newDistance := d + s.distanceToStation[s.currentNode]
+		if shorterThanPreviousCalc(newDistance, s.distanceToStation[st]) {
+			s.distanceToStation[st] = newDistance
 		}
 	}
+}
+
+func shorterThanPreviousCalc(newDistance, currentDist int) bool {
+	return newDistance < currentDist
 }
 
 func (s *ShortestPathTrip) createUnvisitedConnectionsMap(currentStation *station) map[*station]int {
