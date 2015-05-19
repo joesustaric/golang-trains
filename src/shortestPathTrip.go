@@ -22,10 +22,10 @@ func NewShortestPathTrip(n *Network, t *trip) *ShortestPathTrip {
 		originalTrip: t, currentNode: t.from, visitedStations: visitedStations, distanceToStation: distToStation}
 }
 
-// GetNextStation returns the next station to visit based on Dijkstra's algorithm.
-// It will return the next unvisited station to visit with the next lowest
+// VisitNextStation sets the next station to visit based on Dijkstra's algorithm.
+// It will set the next unvisited station to visit with the next lowest
 // connection distance, based on the current node were at.
-func (s *ShortestPathTrip) GetNextStation() *station {
+func (s *ShortestPathTrip) VisitNextStation() {
 	var result *station
 	lowestDist := INFINITY
 	for st, d := range s.currentNode.connections {
@@ -36,7 +36,8 @@ func (s *ShortestPathTrip) GetNextStation() *station {
 			}
 		}
 	}
-	return result
+	s.visitedStations[result] = true
+	s.currentNode = result
 }
 
 // CalcDistToConn will calculate the distance to all the connecting nodes form
@@ -44,9 +45,9 @@ func (s *ShortestPathTrip) GetNextStation() *station {
 func (s *ShortestPathTrip) CalcDistToConn() {
 	for st, d := range s.currentNode.connections {
 		if s.distanceToStation[st] == INFINITY {
-			s.distanceToStation[st] = d
-		} else {
-			s.distanceToStation[st] = s.distanceToStation[st] + d
+			s.distanceToStation[st] = d + s.distanceToStation[s.currentNode]
+		} else if (d + s.distanceToStation[s.currentNode]) < s.distanceToStation[st] {
+			s.distanceToStation[st] = d + s.distanceToStation[s.currentNode]
 		}
 	}
 }

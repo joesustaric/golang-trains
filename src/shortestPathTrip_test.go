@@ -38,7 +38,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 	})
 }
 
-func TestGetNextStation(t *testing.T) {
+func TestVisitNextStation(t *testing.T) {
 
 	Convey("Given a network and origin and destination trip", t, func() {
 		n, _ := getTestNetworkOfTrains()
@@ -47,9 +47,9 @@ func TestGetNextStation(t *testing.T) {
 			dest, _ := n.GetNode("B")
 			t := trip{org, dest}
 			shortestPathTrip := NewShortestPathTrip(n, &t)
-			nextStation := shortestPathTrip.GetNextStation()
+			shortestPathTrip.VisitNextStation()
 			Convey("It returns the correct next station ", func() {
-				So(nextStation.name, ShouldBeIn, []string{"B", "D"})
+				So(shortestPathTrip.currentNode.name, ShouldBeIn, []string{"B", "D"})
 			})
 		})
 
@@ -58,9 +58,9 @@ func TestGetNextStation(t *testing.T) {
 			dest, _ := n.GetNode("B")
 			t := trip{org, dest}
 			shortestPathTrip := NewShortestPathTrip(n, &t)
-			nextStation := shortestPathTrip.GetNextStation()
+			shortestPathTrip.VisitNextStation()
 			Convey("It returns the correct next station ", func() {
-				So(nextStation.name, ShouldEqual, "C")
+				So(shortestPathTrip.currentNode.name, ShouldEqual, "C")
 			})
 		})
 
@@ -84,9 +84,42 @@ func TestCalcDistToConn(t *testing.T) {
 				So(shortestPathTrip.distanceToStation[s2], ShouldEqual, 5)
 				So(shortestPathTrip.distanceToStation[s3], ShouldEqual, 7)
 			})
-
 		})
 	})
+
+	Convey("Given a shortest path object thats visted one other node than the origin", t, func() {
+		n, _ := getTestNetworkOfTrains()
+		org, _ := n.GetNode("A")
+		dest, _ := n.GetNode("C")
+		t := trip{org, dest}
+		shortestPathTrip := NewShortestPathTrip(n, &t)
+		shortestPathTrip.CalcDistToConn()
+		shortestPathTrip.VisitNextStation()
+		Convey("When ask to calculate dist to connections from its current node", func() {
+			shortestPathTrip.CalcDistToConn()
+			Convey("It calcualte it correctly", func() {
+				s1, _ := n.GetNode("B")
+				s2, _ := n.GetNode("D")
+				s3, _ := n.GetNode("E")
+				s4, _ := n.GetNode("C")
+
+				//Could return one of either these two stations.
+				if shortestPathTrip.currentNode.name == "B" {
+					So(shortestPathTrip.distanceToStation[s1], ShouldEqual, 5)
+					So(shortestPathTrip.distanceToStation[s2], ShouldEqual, 5)
+					So(shortestPathTrip.distanceToStation[s3], ShouldEqual, 7)
+					So(shortestPathTrip.distanceToStation[s4], ShouldEqual, 9)
+				}
+				if shortestPathTrip.currentNode.name == "D" {
+					So(shortestPathTrip.distanceToStation[s1], ShouldEqual, 5)
+					So(shortestPathTrip.distanceToStation[s2], ShouldEqual, 5)
+					So(shortestPathTrip.distanceToStation[s3], ShouldEqual, 7)
+					So(shortestPathTrip.distanceToStation[s4], ShouldEqual, 13)
+				}
+			})
+		})
+	})
+
 }
 
 // These setup the initial state we expect in the test.
