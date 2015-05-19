@@ -79,7 +79,6 @@ func initDistanceToStations(visitedSet map[*station]bool, n *Network) map[*stati
 		s := n.nodes[name]
 		r[s] = INFINITY
 	}
-
 	for s := range visitedSet {
 		r[s] = 0
 	}
