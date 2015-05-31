@@ -1,7 +1,6 @@
 package trains
 
 import (
-	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -165,14 +164,13 @@ func TestCompleted(t *testing.T) {
 			result := shortestPathTrip.Completed()
 
 			Convey("It returns false", func() {
-				for s := range shortestPathTrip.visitedStations {
-					fmt.Print(s.name)
-				}
 				So(result, ShouldBeTrue)
+
 			})
 		})
 
 	})
+
 }
 
 // These setup the initial state we expect in the test.
