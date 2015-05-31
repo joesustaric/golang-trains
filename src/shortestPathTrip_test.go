@@ -1,6 +1,7 @@
 package trains
 
 import (
+	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -140,6 +141,34 @@ func TestCompleted(t *testing.T) {
 
 			Convey("It returns false", func() {
 				So(result, ShouldBeFalse)
+			})
+		})
+
+	})
+
+	Convey("Given a new shortest path object that still has no more stations to visit", t, func() {
+		n, _ := getSimpleTestNetworkOfTrains()
+		org, _ := n.GetNode("A")
+		dest, _ := n.GetNode("C")
+		t := trip{org, dest}
+		shortestPathTrip := NewShortestPathTrip(n, &t)
+		shortestPathTrip.CalcDistToConn()
+		shortestPathTrip.VisitNextStation()
+
+		shortestPathTrip.CalcDistToConn()
+		shortestPathTrip.VisitNextStation()
+
+		shortestPathTrip.CalcDistToConn()
+		shortestPathTrip.VisitNextStation()
+
+		Convey("When we ask if it is completed", func() {
+			result := shortestPathTrip.Completed()
+
+			Convey("It returns false", func() {
+				for s := range shortestPathTrip.visitedStations {
+					fmt.Print(s.name)
+				}
+				So(result, ShouldBeTrue)
 			})
 		})
 
