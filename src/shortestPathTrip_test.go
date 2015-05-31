@@ -97,6 +97,7 @@ func TestCalcDistToConn(t *testing.T) {
 		shortestPathTrip.VisitNextStation()
 		Convey("When ask to calculate dist to connections from its current node", func() {
 			shortestPathTrip.CalcDistToConn()
+
 			Convey("It calcualte it correctly", func() {
 				s1, _ := n.GetNode("B")
 				s2, _ := n.GetNode("D")
@@ -104,6 +105,7 @@ func TestCalcDistToConn(t *testing.T) {
 				s4, _ := n.GetNode("C")
 
 				//Could return one of either these two stations.
+				// i.e this is non deterministic but both these results are correct.
 				if shortestPathTrip.currentNode.name == "B" {
 					So(shortestPathTrip.distanceToStation[s1], ShouldEqual, 5)
 					So(shortestPathTrip.distanceToStation[s2], ShouldEqual, 5)
@@ -120,6 +122,28 @@ func TestCalcDistToConn(t *testing.T) {
 		})
 	})
 
+}
+
+func TestCompleted(t *testing.T) {
+
+	Convey("Given a new shortest path object that still has stations to visit", t, func() {
+		n, _ := getTestNetworkOfTrains()
+		org, _ := n.GetNode("A")
+		dest, _ := n.GetNode("C")
+		t := trip{org, dest}
+		shortestPathTrip := NewShortestPathTrip(n, &t)
+		shortestPathTrip.CalcDistToConn()
+		shortestPathTrip.VisitNextStation()
+
+		Convey("When we ask if it is completed", func() {
+			result := shortestPathTrip.Completed()
+
+			Convey("It returns false", func() {
+				So(result, ShouldBeFalse)
+			})
+		})
+
+	})
 }
 
 // These setup the initial state we expect in the test.

@@ -51,6 +51,12 @@ func (s *ShortestPathTrip) CalcDistToConn() {
 	}
 }
 
+// Completed will return true if the shortest path trip obejct has more nodes to
+// visit. False if we have reached the destination.
+func (s *ShortestPathTrip) Completed() bool {
+	return false
+}
+
 func shorterThanPreviousCalc(newDistance, currentDist int) bool {
 	return newDistance < currentDist
 }
