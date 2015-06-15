@@ -121,7 +121,6 @@ func TestCalcDistToConn(t *testing.T) {
 			})
 		})
 	})
-
 }
 
 func TestCompleted(t *testing.T) {
@@ -145,7 +144,7 @@ func TestCompleted(t *testing.T) {
 
 	})
 
-	Convey("Given a new shortest path object that still has no more stations to visit", t, func() {
+	Convey("Given a new shortest path object that has no more stations to visit", t, func() {
 		n, _ := getSimpleTestNetworkOfTrains()
 		org, _ := n.GetNode("A")
 		dest, _ := n.GetNode("C")
@@ -160,11 +159,34 @@ func TestCompleted(t *testing.T) {
 		shortestPathTrip.CalcDistToConn()
 		shortestPathTrip.VisitNextStation()
 
+		shortestPathTrip.CalcDistToConn()
+		shortestPathTrip.VisitNextStation()
+
 		Convey("When we ask if it is completed", func() {
 			result := shortestPathTrip.Completed()
 
-			Convey("It returns false", func() {
+			Convey("It returns true", func() {
 				So(result, ShouldBeTrue)
+
+			})
+		})
+	})
+
+	Convey("Given a network and origin and destination trip org and dest the same", t, func() {
+		n, _ := getTestNetworkOfTrains()
+		org, _ := n.GetNode("B")
+		dest, _ := n.GetNode("B")
+		t := trip{org, dest}
+
+		Convey("When we ask if it is completed", func() {
+
+			shortestPathTrip := NewShortestPathTrip(n, &t)
+			shortestPathTrip.VisitNextStation()
+
+			result := shortestPathTrip.Completed()
+
+			Convey("It returns false", func() {
+				So(result, ShouldBeFalse)
 
 			})
 		})

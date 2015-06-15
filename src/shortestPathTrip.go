@@ -1,5 +1,7 @@
 package trains
 
+import "fmt"
+
 // This my representation of infinity for lack of a better way.
 const INFINITY = 99999
 
@@ -17,7 +19,7 @@ type ShortestPathTrip struct {
 // all the correct default values
 func NewShortestPathTrip(n *Network, t *trip) *ShortestPathTrip {
 	visitedStations := createDefaultVisitedStationsMap(n, t)
-	distToStation := initDistanceToStations(visitedStations, n)
+	distToStation := initDistanceToStations(visitedStations, n, t)
 	return &ShortestPathTrip{network: n,
 		originalTrip: t, currentNode: t.from, visitedStations: visitedStations, distanceToStation: distToStation}
 }
@@ -48,13 +50,42 @@ func (s *ShortestPathTrip) CalcDistToConn() {
 		if shorterThanPreviousCalc(newDistance, s.distanceToStation[st]) {
 			s.distanceToStation[st] = newDistance
 		}
+
 	}
 }
 
-// Completed will return false if the shortest path trip obejct has more nodes to
+// Completed will return false if the shortest path trip object has more nodes to
 // visit. True if we have reached the destination.
 func (s *ShortestPathTrip) Completed() bool {
-	return s.visitedStations[s.originalTrip.to]
+	// result := s.visitedStations[s.originalTrip.to]
+
+	// return (result)
+	v := true
+	for st := range s.currentNode.connections {
+		visited := s.visitedStations[st]
+		if !visited {
+			fmt.Println("NOT VISITED")
+			fmt.Println(st.name)
+			v = false
+		} else {
+			fmt.Println("VISITED")
+			fmt.Println(st.name)
+		}
+	}
+
+	for st, d := range s.distanceToStation {
+		fmt.Println("DEST")
+		fmt.Println(st.name)
+		fmt.Println("Dist")
+		fmt.Println(d)
+
+	}
+
+	return (s.visitedStations[s.originalTrip.to] && v)
+}
+
+func (s *ShortestPathTrip) currentNodeStillHaveUnvitiedConnections() {
+
 }
 
 func shorterThanPreviousCalc(newDistance, currentDist int) bool {
@@ -79,14 +110,17 @@ func createDefaultVisitedStationsMap(n *Network, t *trip) map[*station]bool {
 	return r
 }
 
-func initDistanceToStations(visitedSet map[*station]bool, n *Network) map[*station]int {
+func initDistanceToStations(visitedSet map[*station]bool, n *Network, t *trip) map[*station]int {
 	r := make(map[*station]int)
 	for name := range n.nodes {
 		s := n.nodes[name]
 		r[s] = INFINITY
 	}
-	for s := range visitedSet {
-		r[s] = 0
+	if t.from != t.to {
+		for s := range visitedSet {
+			r[s] = 0
+		}
 	}
+
 	return r
 }
