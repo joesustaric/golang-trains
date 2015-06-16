@@ -27,10 +27,12 @@ func TestNewShortestPathTrip(t *testing.T) {
 				So(ok, ShouldBeTrue)
 				So(orgVisited, ShouldEqual, 1)
 				So(spt.currentNode, ShouldEqual, org)
-
 			})
 		})
-
 	})
+
+}
+
+func TestCanGetToDestination(t *testing.T) {
 
 }
