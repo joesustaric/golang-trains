@@ -30,9 +30,24 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 		})
 	})
-
 }
 
-func TestCanGetToDestination(t *testing.T) {
+func TestCalculateConnectionDistanceFromCurrent(t *testing.T) {
+	Convey("Given a valid network and Trip and initalised NewShortestPath", t, func() {
+		testNetwork, _ := getSimplerTestNetworkOfTrains()
+		org, _ := testNetwork.GetNode("A")
+		dest, _ := testNetwork.GetNode("B")
+		testTrip := &trip{org, dest}
+		spt := NewShortestPathTrip(testNetwork, testTrip)
 
+		Convey("When we ask to calculate distance to connecting nodes form current", func() {
+			spt.CalculateConnectionDistanceFromCurrent()
+
+			Convey("It calcualte the correct distances", func() {
+				c, _ := testNetwork.GetNode("C")
+				So(spt.distanceToStation[dest], ShouldEqual, 1)
+				So(spt.distanceToStation[c], ShouldEqual, 4)
+			})
+		})
+	})
 }

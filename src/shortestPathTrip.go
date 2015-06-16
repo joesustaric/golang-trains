@@ -25,3 +25,22 @@ func (s *ShortestPathTrip) initaliseTrip() {
 	s.currentNode = s.originalTrip.from
 	s.visitedStationTimes[s.currentNode] = 1
 }
+
+// CalculateConnectionDistanceFromCurrent blah
+func (s *ShortestPathTrip) CalculateConnectionDistanceFromCurrent() {
+	visitedTimes, ok := s.visitedStationTimes[s.currentNode]
+
+	if ok && visitedTimes == 1 {
+		dist, okay := s.distanceToStation[s.currentNode]
+
+		if okay {
+			for conn := range s.currentNode.connections {
+				s.distanceToStation[conn] = s.distanceToStation[conn] + dist
+			}
+		} else {
+			for conn := range s.currentNode.connections {
+				s.distanceToStation[conn] = s.currentNode.GetDistanceTo(conn)
+			}
+		}
+	}
+}
