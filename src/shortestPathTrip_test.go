@@ -41,7 +41,7 @@ func TestCalculateConnectionDistanceFromCurrent(t *testing.T) {
 		spt := NewShortestPathTrip(testNetwork, testTrip)
 
 		Convey("When we ask to calculate distance to connecting nodes form current", func() {
-			spt.CalculateConnectionDistanceFromCurrent()
+			spt.CalculateConnectionsDistanceFromCurrent()
 
 			Convey("It calcualte the correct distances", func() {
 				c, _ := testNetwork.GetNode("C")
@@ -56,21 +56,61 @@ func TestVisitNextNode(t *testing.T) {
 	Convey("Given a valid NewShortestPath obejct and one set of distance calculations", t, func() {
 		testNetwork, _ := getSimplerTestNetworkOfTrains()
 		org, _ := testNetwork.GetNode("A")
-		dest, _ := testNetwork.GetNode("B")
+		dest, _ := testNetwork.GetNode("C")
 		testTrip := &trip{org, dest}
 		spt := NewShortestPathTrip(testNetwork, testTrip)
-		spt.CalculateConnectionDistanceFromCurrent()
+		spt.CalculateConnectionsDistanceFromCurrent()
 
 		Convey("When we ask to move to the next node", func() {
 			spt.VisitNextNode()
 
-			Convey("It sets the next unvisited connection with the lowest connecting distance as the current and marks it as visited once", func() {
-				b, _ := testNetwork.GetNode("B")
-				connVistited, _ := spt.visitedStationTimes[b]
+			b, _ := testNetwork.GetNode("B")
+
+			Convey("It sets the next unvisited connection with the lowest connecting distance as the current", func() {
+				So(spt.currentNode, ShouldEqual, b)
+			})
+
+			Convey("It marks the new Node as visited once", func() {
+				connVistited, visited := spt.visitedStationTimes[b]
 				So(connVistited, ShouldEqual, 1)
-				So(spt.currentNode, ShouldEqual, dest)
+				So(visited, ShouldBeTrue)
+			})
+
+			Convey("It sets the distance from the origin to that node correctly", func() {
 				So(spt.distanceToStation[b], ShouldEqual, 1)
 			})
+
+		})
+	})
+
+	Convey("Given a valid NewShortestPath obejct and we have reached the destination", t, func() {
+		testNetwork, _ := getSimplerTestNetworkOfTrains()
+		org, _ := testNetwork.GetNode("A")
+		dest, _ := testNetwork.GetNode("C")
+		testTrip := &trip{org, dest}
+		spt := NewShortestPathTrip(testNetwork, testTrip)
+		spt.CalculateConnectionsDistanceFromCurrent()
+		spt.VisitNextNode()
+		spt.CalculateConnectionsDistanceFromCurrent()
+		spt.VisitNextNode()
+
+		Convey("When we ask to move to the next node", func() {
+			spt.VisitNextNode()
+
+			Convey("It keeps the current node as the destination", func() {
+				So(spt.currentNode, ShouldEqual, dest)
+			})
+
+			Convey("It calculates the correct shortest distance to the destination", func() {
+				dist, ok := spt.distanceToStation[dest]
+				So(dist, ShouldEqual, 3)
+				So(ok, ShouldBeTrue)
+			})
+
+			Convey("It marks the trip as completed", func() {
+				So(spt.completed, ShouldBeTrue)
+			})
+
 		})
 	})
 }
