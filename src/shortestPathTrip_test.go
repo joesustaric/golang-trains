@@ -51,3 +51,26 @@ func TestCalculateConnectionDistanceFromCurrent(t *testing.T) {
 		})
 	})
 }
+
+func TestVisitNextNode(t *testing.T) {
+	Convey("Given a valid NewShortestPath obejct and one set of distance calculations", t, func() {
+		testNetwork, _ := getSimplerTestNetworkOfTrains()
+		org, _ := testNetwork.GetNode("A")
+		dest, _ := testNetwork.GetNode("B")
+		testTrip := &trip{org, dest}
+		spt := NewShortestPathTrip(testNetwork, testTrip)
+		spt.CalculateConnectionDistanceFromCurrent()
+
+		Convey("When we ask to move to the next node", func() {
+			spt.VisitNextNode()
+
+			Convey("It sets the next unvisited connection with the lowest connecting distance as the current and marks it as visited once", func() {
+				b, _ := testNetwork.GetNode("B")
+				connVistited, _ := spt.visitedStationTimes[b]
+				So(connVistited, ShouldEqual, 1)
+				So(spt.currentNode, ShouldEqual, dest)
+				So(spt.distanceToStation[b], ShouldEqual, 1)
+			})
+		})
+	})
+}

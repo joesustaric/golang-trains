@@ -1,5 +1,7 @@
 package trains
 
+import "fmt"
+
 // This my representation of infinity for lack of a better way.
 const INFINITY = 99999
 
@@ -43,4 +45,23 @@ func (s *ShortestPathTrip) CalculateConnectionDistanceFromCurrent() {
 			}
 		}
 	}
+}
+
+// VisitNextNode blah blah
+func (s *ShortestPathTrip) VisitNextNode() {
+	shortestDist := INFINITY
+	nextNode := &station{}
+
+	for conn := range s.currentNode.connections {
+		_, visited := s.visitedStationTimes[conn]
+		if !visited {
+			if s.currentNode.GetDistanceTo(conn) <= shortestDist {
+				shortestDist = s.currentNode.GetDistanceTo(conn)
+				nextNode = conn
+				fmt.Println(s.currentNode.GetDistanceTo(conn))
+			}
+		}
+	}
+	s.visitedStationTimes[nextNode] = 1
+	s.currentNode = nextNode
 }
