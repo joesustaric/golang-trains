@@ -25,11 +25,20 @@ func NewShortestPathTrip(n *Network, t *trip) (*ShortestPathTrip, error) {
 func initUnVisitedSet(n *Network, t *trip) map[*station]int {
 	result := make(map[*station]int)
 	for _, stn := range n.nodes {
-		if stn != t.from || stn != t.to {
+		if stationShouldBeIncluded(stn, t) {
 			result[stn] = INFINITY
 		}
 	}
 	return result
+}
+
+func stationShouldBeIncluded(s *station, t *trip) bool {
+	notEqualToOrgOrDest := s != t.from || s != t.to
+	orgAndDestEqual := s == t.from && s == t.to
+	if orgAndDestEqual {
+		return true
+	}
+	return notEqualToOrgOrDest
 }
 
 func initVisitedSet(trip *trip) map[*station]int {
