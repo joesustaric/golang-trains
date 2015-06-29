@@ -1,75 +1,39 @@
 package trains
 
-// This my representation of infinity for lack of a better way.
-const INFINITY = 99999
-
-// ShortestPathTrip this is the data structure which contains all the data
-// needed to calculate the shortest path trip.
+// ShortestPathTrip struct
 type ShortestPathTrip struct {
-	myNetwork           *Network
-	originalTrip        *trip
-	currentNode         *station
-	visitedStationTimes map[*station]int
-	distanceToStation   map[*station]int
-	completed           bool
+	visitedSet   map[*station]int
+	unVisitedSet map[*station]int
+	completed    bool
+	originalTrip *trip
 }
 
-// NewShortestPathTrip returns a newly initalised object
-func NewShortestPathTrip(n *Network, t *trip) *ShortestPathTrip {
-	result := &ShortestPathTrip{myNetwork: n, originalTrip: t, currentNode: t.from, completed: false}
-	result.initaliseTrip()
+// INFINITY crap representation of infinity concept
+var INFINITY = 99999
+
+// NewShortestPathTrip new object
+func NewShortestPathTrip(n *Network, t *trip) (*ShortestPathTrip, error) {
+	result := &ShortestPathTrip{
+		visitedSet:   initVisitedSet(t),
+		unVisitedSet: initUnVisitedSet(n, t),
+		completed:    false,
+		originalTrip: t}
+
+	return result, nil
+}
+
+func initUnVisitedSet(n *Network, t *trip) map[*station]int {
+	result := make(map[*station]int)
+	for _, stn := range n.nodes {
+		if stn != t.from || stn != t.to {
+			result[stn] = INFINITY
+		}
+	}
 	return result
 }
 
-func (s *ShortestPathTrip) initaliseTrip() {
-	s.visitedStationTimes, s.distanceToStation = make(map[*station]int), make(map[*station]int)
-	s.currentNode = s.originalTrip.from
-	s.visitedStationTimes[s.currentNode] = 1
-}
-
-// CalculateConnectionsDistanceFromCurrent blah
-func (s *ShortestPathTrip) CalculateConnectionsDistanceFromCurrent() {
-	visitedTimes, ok := s.visitedStationTimes[s.currentNode]
-
-	if ok && visitedTimes == 1 {
-		dist, okay := s.distanceToStation[s.currentNode]
-
-		if okay {
-			for conn := range s.currentNode.connections {
-				s.distanceToStation[conn] = s.currentNode.GetDistanceTo(conn) + dist
-			}
-		} else {
-			// If we get here it should be the first trip form the origin
-			for conn := range s.currentNode.connections {
-				s.distanceToStation[conn] = s.currentNode.GetDistanceTo(conn)
-			}
-		}
-	}
-
-}
-
-// VisitNextNode blah blah
-func (s *ShortestPathTrip) VisitNextNode() {
-	if !s.completed {
-
-		shortestDist := INFINITY
-		nextNode := &station{}
-
-		for conn := range s.currentNode.connections {
-			_, visited := s.visitedStationTimes[conn]
-			if !visited {
-				if s.currentNode.GetDistanceTo(conn) <= shortestDist {
-					shortestDist = s.currentNode.GetDistanceTo(conn)
-					nextNode = conn
-				}
-			}
-		}
-
-		s.visitedStationTimes[nextNode] = 1
-		s.currentNode = nextNode
-
-		if nextNode == s.originalTrip.to {
-			s.completed = true
-		}
-	}
+func initVisitedSet(trip *trip) map[*station]int {
+	result := make(map[*station]int)
+	result[trip.from] = 0
+	return result
 }
