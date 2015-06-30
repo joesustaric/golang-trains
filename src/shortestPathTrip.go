@@ -6,6 +6,7 @@ type ShortestPathTrip struct {
 	unVisitedSet map[*station]int
 	completed    bool
 	originalTrip *trip
+	currentNode  *station
 }
 
 // INFINITY crap representation of infinity concept
@@ -17,7 +18,8 @@ func NewShortestPathTrip(n *Network, t *trip) (*ShortestPathTrip, error) {
 		visitedSet:   initVisitedSet(t),
 		unVisitedSet: initUnVisitedSet(n, t),
 		completed:    false,
-		originalTrip: t}
+		originalTrip: t,
+		currentNode:  t.from}
 
 	return result, nil
 }
@@ -45,4 +47,41 @@ func initVisitedSet(trip *trip) map[*station]int {
 	result := make(map[*station]int)
 	result[trip.from] = 0
 	return result
+}
+
+// CalcDistToConnectionsAndVisitNext blah
+func (spt *ShortestPathTrip) CalcDistToConnectionsAndVisitNext() {
+	// if not completed
+	// go through all connections for current node
+	// add node shortest distance calc to the connection
+	// if lower then current value for that node
+	// make it the new value
+
+	//go through unvisited set find the node with shortest dist
+	//remove it from unvisited
+	//add it to visited
+	//make it current node
+
+	if !spt.completed {
+		for c := range spt.currentNode.connections {
+			newDist := spt.visitedSet[spt.currentNode] + spt.currentNode.GetDistanceTo(c)
+			if newDist < spt.unVisitedSet[c] {
+				spt.unVisitedSet[c] = newDist
+			}
+		}
+	}
+	nextNode := &station{}
+	shortestDist := INFINITY
+	for node, dist := range spt.unVisitedSet {
+		if dist < shortestDist {
+			nextNode = node
+			shortestDist = dist
+		}
+	}
+	spt.currentNode = nextNode
+
+	if spt.currentNode == spt.originalTrip.to {
+		spt.completed = true
+	}
+
 }
