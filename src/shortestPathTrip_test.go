@@ -224,7 +224,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 				So(len(shortestPathTrip.visitedSet), ShouldEqual, 3)
 			})
 
-			Convey("Then it sets the correct current node", func() {
+			Convey("Then it makes the next unvisited node with the shortest distance the current", func() {
 				So(shortestPathTrip.currentNode, ShouldEqual, c)
 			})
 
@@ -239,22 +239,32 @@ func TestNewShortestPathTrip(t *testing.T) {
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
-			b, _ := network.GetNode("B")
-			c, _ := network.GetNode("C")
+			a, _ := network.GetNode("A")
 			d, _ := network.GetNode("D")
 
+			Convey("Then removes the current node form the unVisited set", func() {
+				_, ok := shortestPathTrip.unVisitedSet[shortestPathTrip.currentNode]
+				So(ok, ShouldBeFalse)
+				So(len(shortestPathTrip.unVisitedSet), ShouldEqual, 1)
+			})
+
 			Convey("Then it calculates the correct distance to the unvisited nodes", func() {
-				So(shortestPathTrip.unVisitedSet[b], ShouldEqual, 1)
-				So(shortestPathTrip.unVisitedSet[c], ShouldEqual, 3)
-				So(shortestPathTrip.unVisitedSet[d], ShouldEqual, INFINITY)
+				So(shortestPathTrip.unVisitedSet[d], ShouldEqual, 6)
+			})
+
+			Convey("Then it adds the current node to the visited set with the correct distance", func() {
+				dist, ok := shortestPathTrip.visitedSet[shortestPathTrip.currentNode]
+				So(ok, ShouldBeTrue)
+				So(dist, ShouldEqual, 6)
+				So(len(shortestPathTrip.visitedSet), ShouldEqual, 4)
 			})
 
 			Convey("Then it makes the next unvisited node with the shortest distance the current", func() {
-				So(shortestPathTrip.currentNode, ShouldEqual, c)
+				So(shortestPathTrip.currentNode, ShouldEqual, a)
 			})
 
 			Convey("Then it marks the calculation as completed", func() {
-				So(shortestPathTrip.completed, ShouldBeFalse)
+				So(shortestPathTrip.completed, ShouldBeTrue)
 			})
 		})
 
