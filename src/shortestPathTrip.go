@@ -35,12 +35,13 @@ func initUnVisitedSet(n *Network, t *trip) map[*station]int {
 }
 
 func stationShouldBeIncluded(s *station, t *trip) bool {
-	notEqualToOrgOrDest := s != t.from || s != t.to
+	notEqualToOrg := s != t.from
 	orgAndDestEqual := s == t.from && s == t.to
 	if orgAndDestEqual {
 		return true
 	}
-	return notEqualToOrgOrDest
+
+	return notEqualToOrg
 }
 
 func initVisitedSet(trip *trip) map[*station]int {
@@ -69,19 +70,25 @@ func (spt *ShortestPathTrip) CalcDistToConnectionsAndVisitNext() {
 				spt.unVisitedSet[c] = newDist
 			}
 		}
-	}
-	nextNode := &station{}
-	shortestDist := INFINITY
-	for node, dist := range spt.unVisitedSet {
-		if dist < shortestDist {
-			nextNode = node
-			shortestDist = dist
-		}
-	}
-	spt.currentNode = nextNode
 
-	if spt.currentNode == spt.originalTrip.to {
-		spt.completed = true
+		nextNode := &station{}
+		shortestDist := INFINITY
+		for node, dist := range spt.unVisitedSet {
+			if dist < shortestDist {
+				nextNode = node
+				shortestDist = dist
+			}
+		}
+
+		spt.currentNode = nextNode
+		dist, _ := spt.unVisitedSet[nextNode]
+		spt.visitedSet[nextNode] = dist
+		delete(spt.unVisitedSet, nextNode)
+
+		if spt.currentNode == spt.originalTrip.to {
+			spt.completed = true
+		}
+
 	}
 
 }
