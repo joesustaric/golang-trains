@@ -51,17 +51,6 @@ func initVisitedSet(trip *trip) map[*station]int {
 
 // CalcDistToConnectionsAndVisitNext blah
 func (spt *ShortestPathTrip) CalcDistToConnectionsAndVisitNext() {
-	// if not completed
-	// go through all connections for current node
-	// add node shortest distance calc to the connection
-	// if lower then current value for that node
-	// make it the new value
-
-	//go through unvisited set find the node with shortest dist
-	//remove it from unvisited
-	//add it to visited
-	//make it current node
-
 	if !spt.Completed {
 		spt.calculateDistanceToCurrentStationConn()
 		spt.setNextNodeToVisit()
