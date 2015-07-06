@@ -73,11 +73,20 @@ func (spt *ShortestPathTrip) CalcDistToConnectionsAndVisitNext() {
 
 		nextNode := &station{}
 		shortestDist := INFINITY
-		for node, dist := range spt.unVisitedSet {
-			if dist < shortestDist {
-				nextNode = node
-				shortestDist = dist
+
+		for node := range spt.visitedSet {
+
+			for conn := range node.connections {
+
+				if _, ok := spt.unVisitedSet[conn]; ok {
+
+					if node.GetDistanceTo(conn) < shortestDist {
+						nextNode = conn
+						shortestDist = node.GetDistanceTo(conn)
+					}
+				}
 			}
+
 		}
 
 		spt.currentNode = nextNode

@@ -1,6 +1,7 @@
 package trains
 
 import (
+	"fmt"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -234,7 +235,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 
 		})
 
-		SkipConvey("When we ask to calculate the distance to the current nodes connections and visit next thrice", func() {
+		Convey("When we ask to calculate the distance to the current nodes connections and visit next thrice", func() {
 
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
@@ -254,9 +255,10 @@ func TestNewShortestPathTrip(t *testing.T) {
 
 			Convey("Then it adds the current node to the visited set with the correct distance", func() {
 				dist, ok := shortestPathTrip.visitedSet[shortestPathTrip.currentNode]
+				fmt.Println(shortestPathTrip.currentNode)
 				So(ok, ShouldBeTrue)
 				So(dist, ShouldEqual, 6)
-				So(len(shortestPathTrip.visitedSet), ShouldEqual, 4)
+				So(len(shortestPathTrip.visitedSet), ShouldEqual, 3)
 			})
 
 			Convey("Then it makes the next unvisited node with the shortest distance the current", func() {
