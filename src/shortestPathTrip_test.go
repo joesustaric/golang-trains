@@ -53,7 +53,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it marks the object as trip not completed", func() {
-				So(shortestPathTrip.completed, ShouldBeFalse)
+				So(shortestPathTrip.Completed, ShouldBeFalse)
 			})
 
 			Convey("Then it assigned the from node as the current node", func() {
@@ -97,7 +97,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it marks the object as trip not completed", func() {
-				So(shortestPathTrip.completed, ShouldBeFalse)
+				So(shortestPathTrip.Completed, ShouldBeFalse)
 			})
 
 			Convey("Then it assigned the from node as the current node", func() {
@@ -148,7 +148,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it marks the calculation as completed", func() {
-				So(shortestPathTrip.completed, ShouldBeTrue)
+				So(shortestPathTrip.Completed, ShouldBeTrue)
 			})
 
 		})
@@ -194,7 +194,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it marks the calculation as completed", func() {
-				So(shortestPathTrip.completed, ShouldBeFalse)
+				So(shortestPathTrip.Completed, ShouldBeFalse)
 			})
 
 		})
@@ -230,7 +230,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it marks the calculation as completed", func() {
-				So(shortestPathTrip.completed, ShouldBeFalse)
+				So(shortestPathTrip.Completed, ShouldBeFalse)
 			})
 
 		})
@@ -266,20 +266,10 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it marks the calculation as completed", func() {
-				So(shortestPathTrip.completed, ShouldBeTrue)
+				So(shortestPathTrip.Completed, ShouldBeTrue)
 			})
 		})
 
 	})
 
 }
-
-// Convey("Given", t, func() {
-//
-// 	Convey("When", func() {
-//
-// 		Convey("Then", func() {
-//
-// 		})
-// 	})
-// })

@@ -4,7 +4,7 @@ package trains
 type ShortestPathTrip struct {
 	visitedSet   map[*station]int
 	unVisitedSet map[*station]int
-	completed    bool
+	Completed    bool
 	originalTrip *trip
 	currentNode  *station
 }
@@ -17,7 +17,7 @@ func NewShortestPathTrip(n *Network, t *trip) (*ShortestPathTrip, error) {
 	result := &ShortestPathTrip{
 		visitedSet:   initVisitedSet(t),
 		unVisitedSet: initUnVisitedSet(n, t),
-		completed:    false,
+		Completed:    false,
 		originalTrip: t,
 		currentNode:  t.from}
 
@@ -40,7 +40,6 @@ func stationShouldBeIncluded(s *station, t *trip) bool {
 	if orgAndDestEqual {
 		return true
 	}
-
 	return notEqualToOrg
 }
 
@@ -63,41 +62,49 @@ func (spt *ShortestPathTrip) CalcDistToConnectionsAndVisitNext() {
 	//add it to visited
 	//make it current node
 
-	if !spt.completed {
-		for c := range spt.currentNode.connections {
-			newDist := spt.visitedSet[spt.currentNode] + spt.currentNode.GetDistanceTo(c)
-			if newDist < spt.unVisitedSet[c] {
-				spt.unVisitedSet[c] = newDist
-			}
+	if !spt.Completed {
+		spt.calculateDistanceToCurrentStationConn()
+		spt.setNextNodeToVisit()
+		spt.addCurrentToVisitedAndRemoveFromUnVisited()
+		spt.figureOutIfTripIsCompleted()
+	}
+}
+
+func (spt *ShortestPathTrip) calculateDistanceToCurrentStationConn() {
+	for c := range spt.currentNode.connections {
+		newDist := spt.visitedSet[spt.currentNode] + spt.currentNode.GetDistanceTo(c)
+		if newDist < spt.unVisitedSet[c] {
+			spt.unVisitedSet[c] = newDist
 		}
+	}
+}
 
-		nextNode := &station{}
-		shortestDist := INFINITY
+func (spt *ShortestPathTrip) setNextNodeToVisit() {
 
-		for node := range spt.visitedSet {
+	nextNode := &station{}
+	shortestDist := INFINITY
 
-			for conn := range node.connections {
-
-				if _, ok := spt.unVisitedSet[conn]; ok {
-
-					if node.GetDistanceTo(conn) < shortestDist {
-						nextNode = conn
-						shortestDist = node.GetDistanceTo(conn)
-					}
+	for node := range spt.visitedSet {
+		for conn := range node.connections {
+			if _, ok := spt.unVisitedSet[conn]; ok {
+				if node.GetDistanceTo(conn) < shortestDist {
+					nextNode = conn
+					shortestDist = node.GetDistanceTo(conn)
 				}
 			}
-
 		}
-
-		spt.currentNode = nextNode
-		dist, _ := spt.unVisitedSet[nextNode]
-		spt.visitedSet[nextNode] = dist
-		delete(spt.unVisitedSet, nextNode)
-
-		if spt.currentNode == spt.originalTrip.to {
-			spt.completed = true
-		}
-
 	}
+	spt.currentNode = nextNode
+}
 
+func (spt *ShortestPathTrip) addCurrentToVisitedAndRemoveFromUnVisited() {
+	dist, _ := spt.unVisitedSet[spt.currentNode]
+	spt.visitedSet[spt.currentNode] = dist
+	delete(spt.unVisitedSet, spt.currentNode)
+}
+
+func (spt *ShortestPathTrip) figureOutIfTripIsCompleted() {
+	if spt.currentNode == spt.originalTrip.to {
+		spt.Completed = true
+	}
 }
