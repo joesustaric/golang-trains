@@ -22,4 +22,4 @@ TO DO
 - [ ] script file with run commands ```run.sh```
 
 Run tests
-go test -v ./...
+go test -v ./trains
