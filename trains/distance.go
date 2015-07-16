@@ -6,7 +6,7 @@ import "errors"
 // journey.
 func TotalDistance(n *Network, journey []string) (int, error) {
 	totalDist := 0
-	ok := journeyStationsExist(n, journey)
+	ok := journeyStationsExist(n, journey) 
 	if !ok {
 		return 0, errors.New("Station in the journey does not exist")
 	}
