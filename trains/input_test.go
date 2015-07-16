@@ -1,4 +1,4 @@
-package io
+package trains
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 func TestParseInput(t *testing.T) {
 
 	Convey("Given a valid input file loaction on disk", t, func() {
-		testFile := "../../fixtures/test_input.txt"
+		testFile := "../fixtures/test_input.txt"
 		Convey("When ParseInput is called", func() {
 			result := ParseInput(testFile)
 			Convey("Then it returns an array of valid train routes", func() {
