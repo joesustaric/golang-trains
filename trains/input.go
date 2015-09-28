@@ -37,6 +37,7 @@ func openFile(filePath string) *os.File {
 	return file
 }
 
+//dont panic. return error
 func check(e error) {
 	if e != nil {
 		panic(e)

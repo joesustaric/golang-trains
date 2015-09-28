@@ -1,23 +1,34 @@
 package trains
 
-type station struct {
+// Station - todo desc
+type Station struct {
 	name        string
-	connections map[*station]int
+	connections map[*Station]int
 }
 
-func (s station) AddConnection(con *station, distance int) {
+// Stationer - todo desc
+type Stationer interface {
+	AddConnection(con *Station, distance int)
+	GetConnection(name string) Station
+	GetDistanceTo(conn *Station) int
+}
+
+// AddConnection - todo
+func (s Station) AddConnection(con *Station, distance int) {
 	s.connections[con] = distance
 }
 
-func (s station) GetConnection(name string) station {
+// GetConnection - todo
+func (s Station) GetConnection(name string) Station {
 	for k := range s.connections {
 		if k.name == name {
 			return *k
 		}
 	}
-	return station{}
+	return Station{}
 }
 
-func (s station) GetDistanceTo(conn *station) int {
+// GetDistanceTo - todo
+func (s Station) GetDistanceTo(conn *Station) int {
 	return s.connections[conn]
 }

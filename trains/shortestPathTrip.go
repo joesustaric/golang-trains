@@ -2,11 +2,11 @@ package trains
 
 // ShortestPathTrip struct
 type ShortestPathTrip struct {
-	visitedSet   map[*station]int
-	unVisitedSet map[*station]int
+	visitedSet   map[*Station]int
+	unVisitedSet map[*Station]int
 	Completed    bool
 	originalTrip *trip
-	currentNode  *station
+	currentNode  *Station
 }
 
 // INFINITY crap representation of infinity concept
@@ -24,8 +24,8 @@ func NewShortestPathTrip(n *Network, t *trip) (*ShortestPathTrip, error) {
 	return result, nil
 }
 
-func initUnVisitedSet(n *Network, t *trip) map[*station]int {
-	result := make(map[*station]int)
+func initUnVisitedSet(n *Network, t *trip) map[*Station]int {
+	result := make(map[*Station]int)
 	for _, stn := range n.nodes {
 		if stationShouldBeIncluded(stn, t) {
 			result[stn] = INFINITY
@@ -34,7 +34,7 @@ func initUnVisitedSet(n *Network, t *trip) map[*station]int {
 	return result
 }
 
-func stationShouldBeIncluded(s *station, t *trip) bool {
+func stationShouldBeIncluded(s *Station, t *trip) bool {
 	notEqualToOrg := s != t.from
 	orgAndDestEqual := s == t.from && s == t.to
 	if orgAndDestEqual {
@@ -43,8 +43,8 @@ func stationShouldBeIncluded(s *station, t *trip) bool {
 	return notEqualToOrg
 }
 
-func initVisitedSet(trip *trip) map[*station]int {
-	result := make(map[*station]int)
+func initVisitedSet(trip *trip) map[*Station]int {
+	result := make(map[*Station]int)
 	result[trip.from] = 0
 	return result
 }
@@ -70,7 +70,7 @@ func (spt *ShortestPathTrip) calculateDistanceToCurrentStationConn() {
 
 func (spt *ShortestPathTrip) setNextNodeToVisit() {
 
-	nextNode := &station{}
+	nextNode := &Station{}
 	shortestDist := INFINITY
 
 	for node := range spt.visitedSet {
