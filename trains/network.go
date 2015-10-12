@@ -8,12 +8,12 @@ type Network struct {
 // Networker todo - description
 type Networker interface {
 	AddNode(stations ...*Station)
-	GetNode(name string)
+	GetNode(name string) (*Station, bool)
 }
 
 //NewNetwork returns a new network
 func NewNetwork() Network {
-	return Network{map[string]*Station{}}
+	return Network{nodes: make(map[string]*Station)}
 }
 
 //AddNode adds a station to the network

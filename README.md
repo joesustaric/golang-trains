@@ -22,4 +22,5 @@ TO DO
 - [ ] script file with run commands ```run.sh```
 
 Run tests
-go test -v ./trains
+go test -v ./trains  
+goconvey -host 0.0.0.0  

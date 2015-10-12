@@ -1,15 +1,12 @@
 package trains
 
-import (
-	"errors"
-	"fmt"
-)
+import "fmt"
 
 // TotalDistance returns the sum of the total distance between the given station
 // journey.
 func TotalDistance(n *Network, journey []string) (int, error) {
 	if ok := journeyStationsExist(n, journey); !ok {
-		return 0, errors.New("Station in the journey does not exist")
+		return 0, fmt.Errorf("Station in the journey does not exist")
 	}
 	totalDist := 0
 
@@ -21,7 +18,7 @@ func TotalDistance(n *Network, journey []string) (int, error) {
 				totalDist += getDistance(from, to)
 				from = to
 			} else {
-				return 0, errors.New("Can't get to a connection " + to.name)
+				return 0, fmt.Errorf("Can't get to a connection %s", to.name)
 			}
 		}
 		return totalDist, nil
