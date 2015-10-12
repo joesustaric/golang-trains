@@ -10,7 +10,7 @@ func TestAddNodeAndGetNode(t *testing.T) {
 
 	Convey("Given a station name 'F'", t, func() {
 		name := "F"
-		s := &Station{name, map[*Station]int{}}
+		s := NewStation(name)
 		Convey("When we add it to the Network", func() {
 			Network := NewNetwork()
 			Network.AddNode(s)

@@ -11,7 +11,7 @@ func TestStation(t *testing.T) {
 	Convey("Given a station name 'F'", t, func() {
 		name := "F"
 		Convey("When we create a new station", func() {
-			s := Station{name, map[*Station]int{}}
+			s := NewStation(name)
 			Convey("The station should be created correctly", func() {
 				So(s.name, ShouldEqual, "F")
 			})
@@ -23,15 +23,15 @@ func TestAddConnection(t *testing.T) {
 
 	Convey("Given a station object", t, func() {
 		name := "Foo"
-		foo := Station{name, map[*Station]int{}}
+		foo := NewStation(name)
 		Convey("When we add a station it connects to", func() {
-			conectionName := "Bar"
-			bar := Station{conectionName, map[*Station]int{}}
+			connectionName := "Bar"
+			bar := NewStation(connectionName)
 			distance := 5
-			foo.AddConnection(&bar, distance)
+			foo.AddConnection(bar, distance)
 			Convey("The station keeps a refrence to the connection with its distance", func() {
-				So(foo.GetConnection(conectionName), ShouldResemble, bar)
-				So(foo.GetDistanceTo(&bar), ShouldEqual, 5)
+				So(foo.GetConnection(connectionName), ShouldResemble, bar)
+				So(foo.GetDistanceTo(bar), ShouldEqual, 5)
 			})
 		})
 	})

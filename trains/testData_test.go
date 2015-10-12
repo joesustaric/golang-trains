@@ -1,71 +1,57 @@
 package trains
 
 // AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7
-func getTestNetworkOfTrains() (*Network, []*Station) {
-	network := NewNetwork()
+func getTestNetworkOfTrains() (*Network, map[string]*Station) {
+	network, stations := NewNetwork(), NewStations("A", "B", "C", "D", "E")
 
-	a := Station{"A", map[*Station]int{}}
-	b := Station{"B", map[*Station]int{}}
-	c := Station{"C", map[*Station]int{}}
-	d := Station{"D", map[*Station]int{}}
-	e := Station{"E", map[*Station]int{}}
+	stations["A"].AddConnection(stations["B"], 5)
+	stations["B"].AddConnection(stations["C"], 4)
+	stations["C"].AddConnection(stations["D"], 8)
+	stations["D"].AddConnection(stations["C"], 8)
+	stations["D"].AddConnection(stations["E"], 6)
+	stations["A"].AddConnection(stations["D"], 5)
+	stations["C"].AddConnection(stations["E"], 2)
+	stations["E"].AddConnection(stations["B"], 3)
+	stations["A"].AddConnection(stations["E"], 7)
 
-	a.AddConnection(&b, 5)
-	b.AddConnection(&c, 4)
-	c.AddConnection(&d, 8)
-	d.AddConnection(&c, 8)
-	d.AddConnection(&e, 6)
-	a.AddConnection(&d, 5)
-	c.AddConnection(&e, 2)
-	e.AddConnection(&b, 3)
-	a.AddConnection(&e, 7)
-	stations := []*Station{&a, &b, &c, &d, &e}
-	network.AddNode(stations...)
+	for _, station := range stations {
+		network.AddNode(station)
+	}
 
 	return &network, stations
 }
 
 // AB3, BC5, BD3, BE1, EC1, CF7
-func getSimpleTestNetworkOfTrains() (*Network, []*Station) {
-	network := NewNetwork()
+func getSimpleTestNetworkOfTrains() (*Network, map[string]*Station) {
+	network, stations := NewNetwork(), NewStations("A", "B", "C", "D", "E", "F")
 
-	a := Station{"A", map[*Station]int{}}
-	b := Station{"B", map[*Station]int{}}
-	c := Station{"C", map[*Station]int{}}
-	d := Station{"D", map[*Station]int{}}
-	e := Station{"E", map[*Station]int{}}
-	f := Station{"F", map[*Station]int{}}
+	stations["A"].AddConnection(stations["B"], 3)
+	stations["B"].AddConnection(stations["C"], 5)
+	stations["B"].AddConnection(stations["D"], 3)
+	stations["B"].AddConnection(stations["E"], 1)
+	stations["E"].AddConnection(stations["C"], 1)
+	stations["C"].AddConnection(stations["F"], 7)
 
-	a.AddConnection(&b, 3)
-	b.AddConnection(&c, 5)
-	b.AddConnection(&d, 3)
-	b.AddConnection(&e, 1)
-	e.AddConnection(&c, 1)
-	c.AddConnection(&f, 7)
+	for _, station := range stations {
+		network.AddNode(station)
+	}
 
-	Stations := []*Station{&a, &b, &c, &d, &e, &f}
-	network.AddNode(Stations...)
-
-	return &network, Stations
+	return &network, stations
 }
 
-// AB1, AC4, BC2, DB5, CA3
-func getSimplerTestNetworkOfTrains() (*Network, []*Station) {
-	network := NewNetwork()
+// AB1, AC4, BC2, BD5, CA3
+func getSimplerTestNetworkOfTrains() (*Network, map[string]*Station) {
+	network, stations := NewNetwork(), NewStations("A", "B", "C", "D")
 
-	a := Station{"A", map[*Station]int{}}
-	b := Station{"B", map[*Station]int{}}
-	c := Station{"C", map[*Station]int{}}
-	d := Station{"D", map[*Station]int{}}
+	stations["A"].AddConnection(stations["B"], 1)
+	stations["A"].AddConnection(stations["C"], 4)
+	stations["B"].AddConnection(stations["C"], 2)
+	stations["B"].AddConnection(stations["D"], 5)
+	stations["C"].AddConnection(stations["A"], 3)
 
-	a.AddConnection(&b, 1)
-	a.AddConnection(&c, 4)
-	b.AddConnection(&c, 2)
-	b.AddConnection(&d, 5)
-	c.AddConnection(&a, 3)
+	for _, station := range stations {
+		network.AddNode(station)
+	}
 
-	Stations := []*Station{&a, &b, &c, &d}
-	network.AddNode(Stations...)
-
-	return &network, Stations
+	return &network, stations
 }
