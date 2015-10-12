@@ -8,7 +8,7 @@ TO FIX
 - [ ] error tests  
 - [ ] go lint / go vet fixes
 - [ ] more idiomatic golang stuff  
-- [ ]execute in a goroutine pipeline
+- [ ] execute in a goroutine pipeline?
 
 TO DO
 - [ ] cli application ```go-trains```  
@@ -18,10 +18,10 @@ TO DO
 - [ ] cli args ``` --shortest-trip```  
 - [ ] cli args ```--question-file questionsfile.txt```
 - [ ] JUNIT xml parsing of test output
-- [ ] Docker file to create a build and run test container
-- [ ] travis build (or other build server)
+- [ ] Docker file to create a build env and run tests
+- [x] travis build (or other build server)
 - [ ] script file with run commands ```run.sh```
 
-Run tests
+#### Run tests
 go test -v ./trains  
 goconvey -host 0.0.0.0  
