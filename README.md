@@ -11,6 +11,7 @@ TO FIX
 - [ ] execute in a goroutine pipeline?
 
 TO DO
+- [ ] better readme description
 - [ ] cli application ```go-trains```  
 - [ ] cli args ```go-trains --help```  
 - [ ] cli args ```go-trains -f inputfile.txt --distance A-B-C```  
@@ -21,6 +22,9 @@ TO DO
 - [ ] Docker file to create a build env and run tests
 - [x] travis build (or other build server)
 - [ ] script file with run commands ```run.sh```
+
+Extra TODO's  
+- [ ] trains as a web service
 
 #### Run tests
 go test -v ./trains  
