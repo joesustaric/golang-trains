@@ -1,4 +1,5 @@
-# golang-trains
+# golang-trains  
+[![Build Status](https://travis-ci.org/joesustaric/golang-trains.svg?branch=master)](https://travis-ci.org/joesustaric/golang-trains)  
 Trains, takes a network of nodes and connections and can determine shortest path from A-B. Distance for a specific trip.
 
 TO FIX
