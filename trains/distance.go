@@ -5,34 +5,37 @@ import "fmt"
 // TotalDistance returns the sum of the total distance between the given station
 // journey.
 func TotalDistance(n *Network, journey []string) (int, error) {
-	if ok := journeyStationsExist(n, journey); !ok {
-		return 0, fmt.Errorf("Station in the journey does not exist")
+	if err := journeyStationsExist(n, journey); err != nil {
+		return 0, err
 	}
+
 	totalDist := 0
 
+	//needs refactoring here
 	if from, ok := n.GetNode(journey[0]); ok {
 		for _, destName := range journey[1:] {
-			to, _ := n.GetNode(destName)
 
-			if canGetToNextFromCurrent(from, to) {
-				totalDist += getDistance(from, to)
-				from = to
-			} else {
-				return 0, fmt.Errorf("Can't get to a connection %s", to.name)
+			if to, ok := n.GetNode(destName); ok {
+
+				if canGetToNextFromCurrent(from, to) {
+					totalDist += getDistance(from, to)
+					from = to
+				} else {
+					return 0, fmt.Errorf("Can't get to a connection %s", to.name)
+				}
 			}
 		}
-		return totalDist, nil
 	}
-	return 0, fmt.Errorf("Error something")
+	return totalDist, nil
 }
 
-func journeyStationsExist(n *Network, journey []string) bool {
+func journeyStationsExist(n *Network, journey []string) error {
 	for _, st := range journey {
 		if _, ok := n.GetNode(st); !ok {
-			return false
+			return fmt.Errorf("Station in the journey does not exist")
 		}
 	}
-	return true
+	return nil
 }
 
 func getDistance(o, d *Station) int {
