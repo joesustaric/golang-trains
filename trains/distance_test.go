@@ -48,6 +48,7 @@ func TestDistanceCalc(t *testing.T) {
 
 			Convey("It returns an error", func() {
 				So(err, ShouldNotBeNil)
+				So(err.Error(), ShouldContainSubstring, "NO SUCH ROUTE")
 			})
 		})
 

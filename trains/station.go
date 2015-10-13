@@ -36,6 +36,7 @@ type Stationer interface {
 func (s *Station) AddConnection(con *Station, distance int) {
 	s.connMutex.Lock()
 	defer s.connMutex.Unlock()
+
 	s.connections[con] = distance
 }
 

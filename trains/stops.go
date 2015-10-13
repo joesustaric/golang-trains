@@ -34,7 +34,7 @@ func GetNumberOfRoutes(n *Network, thq tripHopsQuery) int {
 func numberOfRoutes(t trip, hopsTravelled, maxHops int) int {
 	result := 0
 	for conn := range t.from.connections {
-		if conn == t.to || result < maxHops {
+		if conn == t.to || result <= maxHops {
 			result++
 		} else if hopsTravelled < maxHops {
 			result += numberOfRoutes(newTrip(conn, t.to), getNewHopTotal(hopsTravelled), maxHops)
