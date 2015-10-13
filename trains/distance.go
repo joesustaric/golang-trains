@@ -21,6 +21,7 @@ func TotalDistance(n *Network, journey []string) (int, error) {
 					totalDist += getDistance(from, to)
 					from = to
 				} else {
+					//NO SUCH ROUTE
 					return 0, fmt.Errorf("Can't get to a connection %s", to.name)
 				}
 			}

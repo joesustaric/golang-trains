@@ -11,8 +11,14 @@ type trip struct {
 	to   *Station
 }
 
-const firstHop int = 1
-const singleHop int = 1
+func newTrip(from, to *Station) trip {
+	return trip{from: from, to: to}
+}
+
+const (
+	firstHop  int = 1
+	singleHop int = 1
+)
 
 // GetNumberOfRoutes returns the number of routes in a network with a hops query.
 func GetNumberOfRoutes(n *Network, thq tripHopsQuery) int {
@@ -21,8 +27,7 @@ func GetNumberOfRoutes(n *Network, thq tripHopsQuery) int {
 	} else if dest, ok := n.GetNode(thq.destination); !ok {
 		return 0
 	} else {
-		tripNodes := trip{from: origin, to: dest}
-		return numberOfRoutes(tripNodes, firstHop, thq.maxHops)
+		return numberOfRoutes(newTrip(origin, dest), firstHop, thq.maxHops)
 	}
 }
 
@@ -32,11 +37,9 @@ func numberOfRoutes(t trip, hopsTravelled, maxHops int) int {
 		if conn == t.to || result < maxHops {
 			result++
 		} else if hopsTravelled < maxHops {
-			connTripNodes := trip{from: conn, to: t.to}
-			result += numberOfRoutes(connTripNodes, getNewHopTotal(hopsTravelled), maxHops)
+			result += numberOfRoutes(newTrip(conn, t.to), getNewHopTotal(hopsTravelled), maxHops)
 		}
 	}
-
 	return result
 }
 
