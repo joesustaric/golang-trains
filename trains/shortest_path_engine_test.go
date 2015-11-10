@@ -9,8 +9,7 @@ import (
 func TestCalculateShortestDistance(t *testing.T) {
 	Convey("When we have a network of stations and a possible trip A-C", t, func() {
 		n, _ := getTestNetworkOfTrains()
-		org, _ := n.GetNode("A")
-		dest, _ := n.GetNode("C")
+		org, dest := n.GetStation("A"), n.GetStation("C")
 		t := trip{org, dest}
 		shortestPathTrip, _ := NewShortestPathTrip(n, &t)
 
@@ -25,7 +24,7 @@ func TestCalculateShortestDistance(t *testing.T) {
 
 	Convey("When we have a network of stations and a possible trip B-B", t, func() {
 		n, _ := getTestNetworkOfTrains()
-		org, _ := n.GetNode("B")
+		org := n.GetStation("B")
 		t := trip{org, org}
 		shortestPathTrip, _ := NewShortestPathTrip(n, &t)
 

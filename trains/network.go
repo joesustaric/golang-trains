@@ -2,29 +2,33 @@ package trains
 
 //Network Network of trains
 type Network struct {
-	nodes map[string]*Station
+	stations map[string]*Station
 }
 
 // Networker todo - description
 type Networker interface {
 	AddNode(stations ...*Station)
-	GetNode(name string) (*Station, bool)
+	GetNode(name string) *Station
 }
 
 //NewNetwork returns a new network
 func NewNetwork() Network {
-	return Network{nodes: make(map[string]*Station)}
+	return Network{stations: make(map[string]*Station)}
 }
 
-//AddNode adds a station to the network
-func (n Network) AddNode(stations ...*Station) {
+//AddStation adds a station to the network
+func (n Network) AddStation(stations ...*Station) {
 	for _, s := range stations {
-		n.nodes[s.name] = s
+		n.stations[s.name] = s
 	}
 }
 
-//GetNode will get the node
-func (n Network) GetNode(name string) (*Station, bool) {
-	node, ok := n.nodes[name]
-	return node, ok
+//GetStation will return the Station if it exists.
+//If not you get a nil.
+func (n Network) GetStation(name string) *Station {
+	if station, ok := n.stations[name]; ok {
+		return station
+	} else {
+		return nil
+	}
 }

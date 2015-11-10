@@ -26,9 +26,9 @@ func NewShortestPathTrip(n *Network, t *trip) (*ShortestPathTrip, error) {
 
 func initUnVisitedSet(n *Network, t *trip) map[*Station]int {
 	result := make(map[*Station]int)
-	for _, stn := range n.nodes {
-		if stationShouldBeIncluded(stn, t) {
-			result[stn] = INFINITY
+	for _, station := range n.stations {
+		if stationShouldBeIncluded(station, t) {
+			result[station] = INFINITY
 		}
 	}
 	return result

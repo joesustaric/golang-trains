@@ -22,8 +22,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 	Convey("Given a valid test network of trains and a valid trip to 2 different destinations", t, func() {
 
 		network, stations := getSimplerTestNetworkOfTrains()
-		orig, _ := network.GetNode("A")
-		dest, _ := network.GetNode("B")
+		orig, dest := network.GetStation("A"), network.GetStation("B")
 		testTrip := &trip{from: orig, to: dest}
 
 		Convey("When we ask for a NewShortestTrip Obejct", func() {
@@ -69,7 +68,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 	Convey("Given a valid test network of trains and a valid trip to and from the same destination", t, func() {
 
 		network, stations := getSimplerTestNetworkOfTrains()
-		orig, _ := network.GetNode("B")
+		orig := network.GetStation("B")
 		testTrip := &trip{from: orig, to: orig}
 
 		Convey("When we ask for a NewShortestTrip Obejct", func() {
@@ -113,8 +112,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 	Convey("Given a valid trip to different to and from destinations one hop apart", t, func() {
 
 		network, _ := getSimplerTestNetworkOfTrains()
-		orig, _ := network.GetNode("A")
-		dest, _ := network.GetNode("B")
+		orig, dest := network.GetStation("A"), network.GetStation("B")
 		testTrip := &trip{from: orig, to: dest}
 		shortestPathTrip, _ := NewShortestPathTrip(network, testTrip)
 
@@ -129,14 +127,13 @@ func TestNewShortestPathTrip(t *testing.T) {
 			})
 
 			Convey("Then it calculates the correct distance to the unvisited nodes", func() {
-				c, _ := network.GetNode("C")
-				d, _ := network.GetNode("D")
+				c, d := network.GetStation("C"), network.GetStation("D")
 				So(shortestPathTrip.unVisitedSet[c], ShouldEqual, 4)
 				So(shortestPathTrip.unVisitedSet[d], ShouldEqual, INFINITY)
 			})
 
 			Convey("Then it makes the next unvisited node with the shortest distance the current", func() {
-				b, _ := network.GetNode("B")
+				b := network.GetStation("B")
 				So(shortestPathTrip.currentNode, ShouldEqual, b)
 			})
 
@@ -157,18 +154,15 @@ func TestNewShortestPathTrip(t *testing.T) {
 	Convey("Given a valid trip to the same to and from destination", t, func() {
 
 		network, _ := getSimplerTestNetworkOfTrains()
-		orig, _ := network.GetNode("A")
-		dest, _ := network.GetNode("A")
+		orig, dest := network.GetStation("A"), network.GetStation("A")
 		testTrip := &trip{from: orig, to: dest}
 		shortestPathTrip, _ := NewShortestPathTrip(network, testTrip)
 
 		Convey("When we ask to calculate the distance to the current nodes connections and visit next once", func() {
 
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
-			a, _ := network.GetNode("A")
-			b, _ := network.GetNode("B")
-			c, _ := network.GetNode("C")
-			d, _ := network.GetNode("D")
+			a, b := network.GetStation("A"), network.GetStation("B")
+			c, d := network.GetStation("C"), network.GetStation("D")
 
 			Convey("Then removes the current node form the unVisited set", func() {
 				_, ok := shortestPathTrip.unVisitedSet[shortestPathTrip.currentNode]
@@ -203,9 +197,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
-			a, _ := network.GetNode("A")
-			c, _ := network.GetNode("C")
-			d, _ := network.GetNode("D")
+			a, c, d := network.GetStation("A"), network.GetStation("C"), network.GetStation("D")
 
 			Convey("Then removes the current node form the unVisited set", func() {
 				_, ok := shortestPathTrip.unVisitedSet[shortestPathTrip.currentNode]
@@ -240,8 +232,7 @@ func TestNewShortestPathTrip(t *testing.T) {
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
 			shortestPathTrip.CalcDistToConnectionsAndVisitNext()
-			a, _ := network.GetNode("A")
-			d, _ := network.GetNode("D")
+			a, d := network.GetStation("A"), network.GetStation("D")
 
 			Convey("Then removes the current node form the unVisited set", func() {
 				_, ok := shortestPathTrip.unVisitedSet[shortestPathTrip.currentNode]
@@ -271,5 +262,4 @@ func TestNewShortestPathTrip(t *testing.T) {
 		})
 
 	})
-
 }

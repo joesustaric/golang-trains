@@ -5,33 +5,39 @@ import "fmt"
 // TotalDistance returns the sum of the total distance between the given station
 // journey.
 func TotalDistance(n *Network, journey []string) (int, error) {
-	if err := journeyStationsExist(n, journey); err != nil {
+	if err := journeyValidation(n, journey); err != nil {
 		return 0, err
 	}
 
-	totalDist := 0
+	return calculateTotalDistance(n, journey)
+}
 
-	//needs refactoring here
-	if from, ok := n.GetNode(journey[0]); ok {
-		for _, destName := range journey[1:] {
+func calculateTotalDistance(n *Network, journey []string) (int, error) {
+	totalDist, firstStation, theRestOfTheTrip := 0, journey[0], journey[1:]
 
-			if to, ok := n.GetNode(destName); ok {
+	from := n.GetStation(firstStation)
 
-				if canGetToNextFromCurrent(from, to) {
-					totalDist += getDistance(from, to)
-					from = to
-				} else {
-					return 0, fmt.Errorf("NO SUCH ROUTE")
-				}
-			}
+	for _, destName := range theRestOfTheTrip {
+		to := n.GetStation(destName)
+
+		if canGetToNextFromCurrent(from, to) {
+			totalDist += getDistance(from, to)
+			from = to
+		} else {
+			return 0, fmt.Errorf("NO SUCH ROUTE")
 		}
 	}
+
 	return totalDist, nil
 }
 
-func journeyStationsExist(n *Network, journey []string) error {
+func journeyValidation(n *Network, journey []string) error {
+	if len(journey) < 2 {
+		return fmt.Errorf("Journey must have at least 2 stations")
+	}
+
 	for _, st := range journey {
-		if _, ok := n.GetNode(st); !ok {
+		if s := n.GetStation(st); s == nil {
 			return fmt.Errorf("Station in the journey does not exist")
 		}
 	}
@@ -39,12 +45,14 @@ func journeyStationsExist(n *Network, journey []string) error {
 }
 
 func getDistance(o, d *Station) int {
+	distance := 0
 	for c, dist := range o.connections {
 		if c.name == d.name {
-			return dist
+			distance = dist
+			break
 		}
 	}
-	return 0
+	return distance
 }
 
 func canGetToNextFromCurrent(current, next *Station) bool {
@@ -52,6 +60,7 @@ func canGetToNextFromCurrent(current, next *Station) bool {
 	for c := range current.connections {
 		if c == next {
 			result = true
+			break
 		}
 	}
 	return result

@@ -22,9 +22,9 @@ const (
 
 // GetNumberOfRoutes returns the number of routes in a network with a hops query.
 func GetNumberOfRoutes(n *Network, thq tripHopsQuery) int {
-	if origin, ok := n.GetNode(thq.origin); !ok {
+	if origin := n.GetStation(thq.origin); origin == nil {
 		return 0
-	} else if dest, ok := n.GetNode(thq.destination); !ok {
+	} else if dest := n.GetStation(thq.destination); dest == nil {
 		return 0
 	} else {
 		return numberOfRoutes(newTrip(origin, dest), firstHop, thq.maxHops)
