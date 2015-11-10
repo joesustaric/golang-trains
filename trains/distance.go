@@ -2,6 +2,8 @@ package trains
 
 import "fmt"
 
+var MINIMUM_JOURNEY_NUMBER = 2
+
 // TotalDistance returns the sum of the total distance between the given station
 // journey.
 func TotalDistance(n *Network, journey []string) (int, error) {
@@ -32,7 +34,7 @@ func calculateTotalDistance(n *Network, journey []string) (int, error) {
 }
 
 func journeyValidation(n *Network, journey []string) error {
-	if len(journey) < 2 {
+	if len(journey) < MINIMUM_JOURNEY_NUMBER {
 		return fmt.Errorf("Journey must have at least 2 stations")
 	}
 
